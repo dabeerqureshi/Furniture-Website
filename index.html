@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Furniture - Same Day Delivery</title>
+    <meta name="description" content="Premium furniture store offering sofas, beds, and mattresses with same day delivery and cash on delivery options.">
+    <meta name="keywords" content="furniture, sofas, beds, mattresses, same day delivery, cash on delivery">
+    
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="Premium Furniture - Same Day Delivery">
+    <meta property="og:description" content="Premium furniture store offering sofas, beds, and mattresses with same day delivery and cash on delivery options.">
+    <meta property="og:image" content="images/hero-image.jpg">
+    <meta property="og:url" content="https://your-furniture-store.github.io">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Tailwind CSS Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased">
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/YOURWHATSAPPNUMBER" target="_blank" 
+       class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 z-50 transform hover:scale-110" 
+       aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary-600">Furniture<span class="text-secondary-800">Store</span></h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                    <a href="shop.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Shop</a>
+                    <a href="about.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+                </nav>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-primary-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="shop.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Shop</a>
+                <a href="about.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="contact.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="relative bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-8">
+                        <div class="space-y-4">
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                                Premium Furniture
+                                <span class="text-primary-600">Same Day Delivery</span>
+                            </h1>
+                            <p class="text-lg sm:text-xl text-gray-600 leading-relaxed">
+                                Discover our collection of premium sofas, beds, and mattresses. 
+                                Quality craftsmanship with fast, reliable delivery right to your doorstep.
+                            </p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="shop.html" class="bg-primary-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                Shop Now
+                            </a>
+                            <a href="https://wa.me/YOURWHATSAPPNUMBER" target="_blank" class="border-2 border-primary-600 text-primary-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600 hover:text-white transition-all duration-300">
+                                Contact on WhatsApp
+                            </a>
+                        </div>
+
+                        <div class="flex items-center space-x-8 pt-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-truck text-primary-600 text-xl"></i>
+                                <span class="text-gray-600 font-medium">Same Day Delivery</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-tags text-primary-600 text-xl"></i>
+                                <span class="text-gray-600 font-medium">Cash on Delivery</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-shield-alt text-primary-600 text-xl"></i>
+                                <span class="text-gray-600 font-medium">Quality Guaranteed</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                            <img src="images/hero-image.jpg" alt="Modern living room furniture" class="w-full h-auto object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        </div>
+                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg">
+                            <div class="text-2xl font-bold text-gray-900">1000+</div>
+                            <div class="text-sm text-gray-600">Happy Customers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+                    <p class="text-lg text-gray-600">Find the perfect piece for every room in your home</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Sofas -->
+                    <div class="group cursor-pointer" onclick="window.location.href='shop.html?category=sofas'">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary-200 transition-colors">
+                                <i class="fas fa-couch text-primary-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Sofas</h3>
+                            <p class="text-gray-600 mb-6">Comfortable and stylish seating solutions for your living room</p>
+                            <div class="flex items-center text-primary-600 font-semibold">
+                                <span>Explore Collection</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Beds -->
+                    <div class="group cursor-pointer" onclick="window.location.href='shop.html?category=beds'">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-secondary-200 transition-colors">
+                                <i class="fas fa-bed text-secondary-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Beds</h3>
+                            <p class="text-gray-600 mb-6">Restful sleep with our premium bed collection</p>
+                            <div class="flex items-center text-secondary-600 font-semibold">
+                                <span>Explore Collection</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mattresses -->
+                    <div class="group cursor-pointer" onclick="window.location.href='shop.html?category=mattresses'">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-green-200 transition-colors">
+                                <i class="fas fa-bed text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Mattresses</h3>
+                            <p class="text-gray-600 mb-6">Perfect support for the best night's sleep</p>
+                            <div class="flex items-center text-green-600 font-semibold">
+                                <span>Explore Collection</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Featured Products</h2>
+                    <p class="text-lg text-gray-600">Our most popular furniture pieces</p>
+                </div>
+                
+                <div id="featured-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Products will be loaded here by JavaScript -->
+                    <div class="animate-pulse">
+                        <div class="bg-gray-300 rounded-2xl h-64 mb-4"></div>
+                        <div class="bg-gray-300 rounded h-6 mb-2"></div>
+                        <div class="bg-gray-300 rounded h-4 mb-4"></div>
+                        <div class="bg-gray-300 rounded h-10 w-24"></div>
+                    </div>
+                    <div class="animate-pulse">
+                        <div class="bg-gray-300 rounded-2xl h-64 mb-4"></div>
+                        <div class="bg-gray-300 rounded h-6 mb-2"></div>
+                        <div class="bg-gray-300 rounded h-4 mb-4"></div>
+                        <div class="bg-gray-300 rounded h-10 w-24"></div>
+                    </div>
+                    <div class="animate-pulse">
+                        <div class="bg-gray-300 rounded-2xl h-64 mb-4"></div>
+                        <div class="bg-gray-300 rounded h-6 mb-2"></div>
+                        <div class="bg-gray-300 rounded h-4 mb-4"></div>
+                        <div class="bg-gray-300 rounded h-10 w-24"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="shop.html" class="inline-flex items-center bg-primary-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        View All Products
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us -->
+        <section class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
+                    <p class="text-lg text-gray-600">We're committed to providing the best furniture shopping experience</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Same Day Delivery -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-200 transition-colors">
+                            <i class="fas fa-truck text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Same Day Delivery</h3>
+                        <p class="text-gray-600">Get your furniture delivered the same day you order. Fast and reliable service.</p>
+                    </div>
+
+                    <!-- Brand New Furniture -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-200 transition-colors">
+                            <i class="fas fa-star text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Brand New Furniture</h3>
+                        <p class="text-gray-600">All our products are brand new and come with quality guarantees.</p>
+                    </div>
+
+                    <!-- Cash on Delivery -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-200 transition-colors">
+                            <i class="fas fa-money-bill-wave text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Cash on Delivery</h3>
+                        <p class="text-gray-600">Pay when your furniture is delivered. No upfront payments required.</p>
+                    </div>
+
+                    <!-- High Quality Materials -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-200 transition-colors">
+                            <i class="fas fa-certificate text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">High Quality Materials</h3>
+                        <p class="text-gray-600">We use only the finest materials to ensure durability and comfort.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+                    <p class="text-lg text-gray-600">Hear from our satisfied customers</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-quote-left text-primary-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Sarah Johnson</h4>
+                                <p class="text-sm text-gray-600">Modern Sofa Set</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">"The sofa we ordered is absolutely beautiful! Quality is excellent and the delivery was super fast. Highly recommended!"</p>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-quote-left text-green-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Michael Chen</h4>
+                                <p class="text-sm text-gray-600">King Size Bed</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">"Excellent customer service and the bed is incredibly comfortable. Same day delivery was a huge bonus!"</p>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-quote-left text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Emily Rodriguez</h4>
+                                <p class="text-sm text-gray-600">Memory Foam Mattress</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">"Best mattress I've ever owned! The quality is outstanding and the ordering process was so easy through WhatsApp."</p>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WhatsApp Contact Banner -->
+        <section class="py-16 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Need Help Choosing Furniture?</h2>
+                <p class="text-xl text-primary-100 mb-8">Our experts are here to help you find the perfect pieces for your home</p>
+                <a href="https://wa.me/YOURWHATSAPPNUMBER" target="_blank" 
+                   class="inline-flex items-center bg-white text-primary-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <i class="fab fa-whatsapp text-2xl mr-3"></i>
+                    Chat on WhatsApp
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold text-primary-400 mb-4">Furniture<span class="text-white">Store</span></h3>
+                    <p class="text-gray-400 mb-6">Your trusted partner for premium furniture with fast delivery and excellent service.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="shop.html" class="hover:text-white transition-colors">Shop</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Return Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 FurnitureStore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Order Modal -->
+    <div id="order-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative animate-in slide-in-from-bottom-2 duration-300">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Order Now</h3>
+                <p class="text-gray-600">Fill in your details to place your order</p>
+            </div>
+            
+            <form id="order-form" class="space-y-4">
+                <input type="hidden" id="product-name">
+                <input type="hidden" id="product-price">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input type="text" id="customer-name" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <input type="tel" id="customer-phone" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">City / Location</label>
+                    <input type="text" id="customer-city" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                    <textarea id="customer-address" required rows="3"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                    <input type="number" id="product-quantity" value="1" min="1" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-600">Product:</span>
+                        <span id="modal-product-name" class="font-semibold"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Total Price:</span>
+                        <span id="modal-total-price" class="text-xl font-bold text-primary-600"></span>
+                    </div>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center animate-in slide-in-from-bottom-2 duration-300">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-green-600 text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h3>
+            <p class="text-gray-600 mb-6">Your order has been sent to WhatsApp. Please complete the order with our representative.</p>
+            <button id="close-success-modal" 
+                    class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/products.js"></script>
+    <script src="js/whatsapp.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/performance.js"></script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+// Main Application JavaScript
+// Handles homepage functionality, quick view modal, and global features
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all components
+    init();
+});
+
+function init() {
+    // Initialize mobile menu
+    initMobileMenu();
+    
+    // Initialize quick view modal
+    initQuickViewModal();
+    
+    // Initialize order modal
+    initOrderModal();
+    
+    // Initialize homepage featured products
+    initFeaturedProducts();
+    
+    // Initialize favorites
+    initFavorites();
+    
+    // Initialize search functionality
+    initSearch();
+    
+    // Initialize category navigation
+    initCategoryNavigation();
+}
+
+// Mobile Menu Functionality
+function initMobileMenu() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    }
+}
+
+// Quick View Modal Functionality
+function initQuickViewModal() {
+    const quickViewModal = document.getElementById('quick-view-modal');
+    const closeQuickViewBtn = document.getElementById('close-quick-view');
+    
+    if (closeQuickViewBtn) {
+        closeQuickViewBtn.addEventListener('click', () => {
+            closeQuickViewModal();
+        });
+    }
+
+    // Close modal when clicking outside
+    if (quickViewModal) {
+        quickViewModal.addEventListener('click', (e) => {
+            if (e.target === quickViewModal) {
+                closeQuickViewModal();
+            }
+        });
+    }
+}
+
+function openQuickView(product) {
+    const modal = document.getElementById('quick-view-modal');
+    const content = document.querySelector('.quick-view-content');
+    
+    if (modal && content) {
+        // Update modal content
+        content.innerHTML = `
+            <div class="gallery-container">
+                <div class="gallery-main">
+                    <img src="${product.images[0]}" alt="${product.name}" class="w-full h-96 object-cover rounded-xl">
+                </div>
+                <div class="gallery-thumbnails">
+                    ${product.images.map((img, index) => `
+                        <img src="${img}" alt="Product image ${index + 1}" 
+                             class="thumbnail ${index === 0 ? 'active' : ''}"
+                             onclick="changeQuickViewImage('${img}', this)">
+                    `).join('')}
+                </div>
+            </div>
+            <div class="product-details">
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-price">${formatPrice(product.price)}</p>
+                <p class="product-description">${product.description}</p>
+                
+                <div class="product-features">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Features</h4>
+                    ${product.features.map(feature => `
+                        <div class="feature-item">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>${feature}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-600">Product:</span>
+                        <span class="font-semibold">${product.name}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Price:</span>
+                        <span class="text-xl font-bold text-primary-600">${formatPrice(product.price)}</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button class="order-now-btn flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105"
+                            onclick="window.openOrderModal(${JSON.stringify(product).replace(/"/g, '"')})">
+                        <i class="fas fa-shopping-cart mr-2"></i>
+                        Order Now
+                    </button>
+                    <button class="whatsapp-btn flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300"
+                            onclick="window.openWhatsAppChat(${JSON.stringify(product).replace(/"/g, '"')})">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        Chat on WhatsApp
+                    </button>
+                </div>
+            </div>
+        `;
+
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeQuickViewModal() {
+    const modal = document.getElementById('quick-view-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+function changeQuickViewImage(imageSrc, thumbnailElement) {
+    const mainImage = document.querySelector('.quick-view-content .gallery-main img');
+    if (mainImage) {
+        mainImage.src = imageSrc;
+    }
+    
+    // Update active thumbnail
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    thumbnailElement.classList.add('active');
+}
+
+// Order Modal Functionality
+function initOrderModal() {
+    const orderModal = document.getElementById('order-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const successModal = document.getElementById('success-modal');
+    const closeSuccessModalBtn = document.getElementById('close-success-modal');
+    const orderForm = document.getElementById('order-form');
+
+    // Close order modal
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            orderModal.classList.add('hidden');
+        });
+    }
+
+    // Close success modal
+    if (closeSuccessModalBtn) {
+        closeSuccessModalBtn.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+        });
+    }
+
+    // Close modals when clicking outside
+    if (orderModal) {
+        orderModal.addEventListener('click', (e) => {
+            if (e.target === orderModal) {
+                orderModal.classList.add('hidden');
+            }
+        });
+    }
+
+    if (successModal) {
+        successModal.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                successModal.classList.add('hidden');
+            }
+        });
+    }
+
+    // Form submission
+    if (orderForm) {
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            processOrder();
+        });
+    }
+}
+
+function openOrderModal(product) {
+    if (!product) return;
+
+    // Set product details in modal
+    document.getElementById('product-name').value = product.id;
+    document.getElementById('product-price').value = product.price;
+    document.getElementById('modal-product-name').textContent = product.name;
+    
+    const totalPrice = product.price;
+    document.getElementById('modal-total-price').textContent = formatPrice(totalPrice);
+
+    // Show modal
+    document.getElementById('order-modal').classList.remove('hidden');
+}
+
+function processOrder() {
+    const form = document.getElementById('order-form');
+    const formData = new FormData(form);
+    
+    const customer = {
+        name: formData.get('customer-name'),
+        phone: formData.get('customer-phone'),
+        city: formData.get('customer-city'),
+        address: formData.get('customer-address'),
+        quantity: parseInt(formData.get('product-quantity'))
+    };
+
+    const product = {
+        id: parseInt(document.getElementById('product-name').value),
+        name: document.getElementById('modal-product-name').textContent,
+        price: parseInt(document.getElementById('product-price').value.replace(/[^0-9]/g, ''))
+    };
+
+    // Send order to WhatsApp
+    window.WhatsAppManager.sendOrderToWhatsApp(product, customer);
+    
+    // Show success modal
+    document.getElementById('success-modal').classList.remove('hidden');
+    
+    // Close order modal
+    document.getElementById('order-modal').classList.add('hidden');
+    
+    // Reset form
+    form.reset();
+}
+
+// Homepage Featured Products
+function initFeaturedProducts() {
+    const featuredProductsContainer = document.getElementById('featured-products');
+    
+    if (featuredProductsContainer) {
+        const featuredProducts = ProductManager.getFeaturedProducts();
+        
+        if (featuredProducts.length > 0) {
+            featuredProductsContainer.innerHTML = '';
+            
+            featuredProducts.slice(0, 3).forEach(product => {
+                const productCard = createProductCard(product);
+                featuredProductsContainer.appendChild(productCard);
+            });
+        }
+    }
+}
+
+function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2';
+    
+    const formattedPrice = formatPrice(product.price);
+
+    card.innerHTML = `
+        <div class="product-image-container relative group">
+            <img src="${product.images[0]}" alt="${product.name}" 
+                 class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                 loading="lazy">
+            
+            <div class="product-badge bg-green-500 text-white">Cash on Delivery</div>
+            
+            <div class="product-overlay">
+                <button class="quick-view-btn bg-white text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors mr-2"
+                        onclick="window.openQuickView(${JSON.stringify(product).replace(/"/g, '"')})">
+                    Quick View
+                </button>
+                <button class="order-now-btn bg-primary-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-primary-700 transition-colors"
+                        onclick="window.openOrderModal(${JSON.stringify(product).replace(/"/g, '"')})">
+                    Order Now
+                </button>
+            </div>
+            
+            <div class="heart-icon ${isFavorited(product.id) ? 'favorited' : ''}" onclick="toggleFavorite(${product.id}, this)">
+                <i class="fas fa-heart"></i>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-bold text-gray-900">${product.name}</h3>
+                <span class="text-sm text-gray-500">${product.category}</span>
+            </div>
+            
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2">${product.description}</p>
+            
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-2xl font-bold text-primary-600">${formattedPrice}</span>
+                <span class="text-sm text-green-600 font-semibold">${product.delivery}</span>
+            </div>
+            
+            <div class="flex space-x-2">
+                <button class="quick-view-btn w-full bg-gray-100 text-gray-900 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                        onclick="window.openQuickView(${JSON.stringify(product).replace(/"/g, '"')})">
+                    Quick View
+                </button>
+                <button class="order-now-btn w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                        onclick="window.openOrderModal(${JSON.stringify(product).replace(/"/g, '"')})">
+                    Order Now
+                </button>
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+// Favorites Functionality
+function initFavorites() {
+    // Update all heart icons on page load
+    document.querySelectorAll('.heart-icon').forEach(icon => {
+        const productId = icon.dataset.productId;
+        if (productId && isFavorited(productId)) {
+            icon.classList.add('favorited');
+        }
+    });
+}
+
+function toggleFavorite(productId, element) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+    if (favorites.includes(productId)) {
+        favorites = favorites.filter(id => id !== productId);
+        element.classList.remove('favorited');
+    } else {
+        favorites.push(productId);
+        element.classList.add('favorited');
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+function isFavorited(productId) {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    return favorites.includes(productId);
+}
+
+// Search Functionality
+function initSearch() {
+    const searchInput = document.getElementById('search-input');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(function(e) {
+            const query = e.target.value.trim();
+            
+            if (query.length > 2) {
+                const results = ProductManager.searchProducts(query);
+                showSearchResults(results, query);
+            } else {
+                hideSearchResults();
+            }
+        }, 300));
+    }
+}
+
+function showSearchResults(results, query) {
+    // This would typically show a dropdown with search results
+    // For now, we'll redirect to shop page with search query
+    if (results.length > 0) {
+        // You could implement a dropdown here
+        console.log(`Found ${results.length} results for "${query}"`);
+    }
+}
+
+function hideSearchResults() {
+    // Hide search results dropdown
+}
+
+// Category Navigation
+function initCategoryNavigation() {
+    // Handle category links
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = link.dataset.category;
+            window.location.href = `shop.html?category=${category}`;
+        });
+    });
+}
+
+// Utility Functions
+function formatPrice(price) {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+    }).format(price);
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Global functions for quick view and order modal
+window.openQuickView = function(product) {
+    openQuickView(product);
+};
+
+window.openOrderModal = function(product) {
+    openOrderModal(product);
+};
+
+window.openWhatsAppChat = function(product) {
+    const message = `I'm interested in your ${product.name} (${formatPrice(product.price)}). Can you provide more details?`;
+    const whatsappUrl = `https://wa.me/${window.WHATSAPP_CONFIG?.phoneNumber || 'YOURWHATSAPPNUMBER'}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+};
+
+// WhatsApp chat function for product detail page
+window.openWhatsAppChat = function(product) {
+    if (window.WhatsAppManager) {
+        window.WhatsAppManager.sendInquiryToWhatsApp(product);
+    } else {
+        const message = `I'm interested in your ${product.name} (${formatPrice(product.price)}). Can you provide more details?`;
+        const whatsappUrl = `https://wa.me/${window.WHATSAPP_CONFIG?.phoneNumber || 'YOURWHATSAPPNUMBER'}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+};
+
+// Make functions available globally
+window.toggleFavorite = toggleFavorite;
+window.isFavorited = isFavorited;
