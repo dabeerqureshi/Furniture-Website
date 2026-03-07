@@ -3,7 +3,7 @@
 
 // WhatsApp Configuration
 const WHATSAPP_CONFIG = {
-    phoneNumber: 'YOURWHATSAPPNUMBER', // Replace with actual number
+    phoneNumber: '923144781120', // Updated WhatsApp number
     businessName: 'Furniture Store',
     currency: 'USD',
     currencySymbol: '$'
@@ -23,9 +23,12 @@ Price: ${formattedPrice}
 Quantity: ${customer.quantity}
 Total Price: ${totalPrice}
 
-Customer Name: ${customer.name}
+Customer Details:
+Name: ${customer.name}
+Email: ${customer.email}
 Phone: ${customer.phone}
 City: ${customer.city}
+Postal Code: ${customer.postalCode}
 Address: ${customer.address}
 
 Payment Method: Cash on Delivery
@@ -287,8 +290,10 @@ class OrderFormHandler {
         
         const customer = {
             name: formData.get('customer-name'),
+            email: formData.get('customer-email'),
             phone: formData.get('customer-phone'),
             city: formData.get('customer-city'),
+            postalCode: formData.get('customer-postal-code'),
             address: formData.get('customer-address'),
             quantity: parseInt(formData.get('product-quantity'))
         };

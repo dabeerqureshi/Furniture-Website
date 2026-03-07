@@ -205,11 +205,14 @@ document.addEventListener('DOMContentLoaded', function() {
             updateFavoriteButton(product.id);
         });
 
-        // Order now button
-        orderNowBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openOrderModal(product);
-        });
+        // Add to cart button
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                addToCart(product);
+            });
+        }
 
         // WhatsApp chat button
         whatsappChatBtn.addEventListener('click', (e) => {
@@ -265,8 +268,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function openWhatsAppChat(product) {
         const message = `I'm interested in your ${product.name} (${product.price}). Can you provide more details?`;
-        const whatsappUrl = `https://wa.me/YOURWHATSAPPNUMBER?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/923144781120?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
+    }
+
+    function addToCart(product) {
+        // Use the CartManager from cart.js
+        if (window.CartManager) {
+            window.CartManager.addToCart(product, 1);
+        } else {
+            console.warn('CartManager not available');
+        }
     }
 
     function setupShareButtons(product) {
