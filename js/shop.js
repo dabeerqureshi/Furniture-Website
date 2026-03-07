@@ -215,9 +215,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             data-product-id="${product.id}">
                         Quick View
                     </button>
-                    <button class="order-now-btn bg-primary-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-primary-700 transition-colors"
+                    <button class="add-to-cart-btn bg-primary-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-primary-700 transition-colors"
                             data-product-id="${product.id}">
-                        Order Now
+                        Add to Cart
                     </button>
                 </div>
                 
@@ -244,9 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             data-product-id="${product.id}">
                         Quick View
                     </button>
-                    <button class="order-now-btn w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                    <button class="add-to-cart-btn w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors"
                             data-product-id="${product.id}">
-                        Order Now
+                        Add to Cart
                     </button>
                 </div>
             </div>
@@ -258,9 +258,9 @@ document.addEventListener('DOMContentLoaded', function() {
             openQuickView(product.id);
         });
 
-        card.querySelector('.order-now-btn').addEventListener('click', (e) => {
+        card.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
             e.preventDefault();
-            openOrderModal(product.id);
+            addToCart(product.id);
         });
 
         card.querySelector('.heart-icon').addEventListener('click', (e) => {
@@ -383,5 +383,18 @@ function openOrderModal(productId) {
     if (product) {
         // This will be handled by the main app.js file
         window.openOrderModal(product);
+    }
+}
+
+// Add to cart function
+function addToCart(productId) {
+    const product = ProductManager.getById(productId);
+    if (product) {
+        // Use the CartManager from cart.js
+        if (window.CartManager) {
+            window.CartManager.addToCart(product, 1);
+        } else {
+            console.warn('CartManager not available');
+        }
     }
 }

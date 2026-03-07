@@ -16,6 +16,12 @@ function init() {
     // Initialize order modal
     initOrderModal();
     
+    // Initialize cart manager
+    if (window.CartManager) {
+        CartManager.init();
+        updateCartCount();
+    }
+    
     // Initialize homepage featured products
     initFeaturedProducts();
     
@@ -27,6 +33,9 @@ function init() {
     
     // Initialize category navigation
     initCategoryNavigation();
+    
+    // Set up cart button event listener
+    setupCartButton();
 }
 
 // Mobile Menu Functionality
@@ -115,10 +124,10 @@ function openQuickView(product) {
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <button class="order-now-btn flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105"
-                            onclick="window.openOrderModal(${JSON.stringify(product).replace(/"/g, '"')})">
+                    <button class="add-to-cart-btn flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105"
+                            data-product-id="${product.id}">
                         <i class="fas fa-shopping-cart mr-2"></i>
-                        Order Now
+                        Add to Cart
                     </button>
                     <button class="whatsapp-btn flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300"
                             onclick="window.openWhatsAppChat(${JSON.stringify(product).replace(/"/g, '"')})">
@@ -222,8 +231,10 @@ function processOrder() {
     
     const customer = {
         name: formData.get('customer-name'),
+        email: formData.get('customer-email'),
         phone: formData.get('customer-phone'),
         city: formData.get('customer-city'),
+        postalCode: formData.get('customer-postal-code'),
         address: formData.get('customer-address'),
         quantity: parseInt(formData.get('product-quantity'))
     };
@@ -313,9 +324,10 @@ function createProductCard(product) {
                         onclick="window.openQuickView(${JSON.stringify(product).replace(/"/g, '"')})">
                     Quick View
                 </button>
-                <button class="order-now-btn w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors"
-                        onclick="window.openOrderModal(${JSON.stringify(product).replace(/"/g, '"')})">
-                    Order Now
+                <button class="add-to-cart-btn w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                        data-product-id="${product.id}"
+                        onclick="addToCartFromCard(${JSON.stringify(product).replace(/"/g, '"')})">
+                    Add to Cart
                 </button>
             </div>
         </div>
@@ -397,6 +409,37 @@ function initCategoryNavigation() {
     });
 }
 
+// Cart Button Setup
+function setupCartButton() {
+    const cartButton = document.getElementById('cart-button');
+    const cartCount = document.getElementById('cart-count');
+    
+    if (cartButton && cartCount && window.CartManager) {
+        // Update cart count on page load
+        updateCartCount();
+        
+        // Add click listener for cart button
+        cartButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'cart.html';
+        });
+    }
+}
+
+// Update cart count in header
+function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    if (cartCount && window.CartManager) {
+        const count = CartManager.getCartCount();
+        if (count > 0) {
+            cartCount.textContent = count;
+            cartCount.classList.remove('hidden');
+        } else {
+            cartCount.classList.add('hidden');
+        }
+    }
+}
+
 // Utility Functions
 function formatPrice(price) {
     return new Intl.NumberFormat('en-US', {
@@ -429,7 +472,7 @@ window.openOrderModal = function(product) {
 
 window.openWhatsAppChat = function(product) {
     const message = `I'm interested in your ${product.name} (${formatPrice(product.price)}). Can you provide more details?`;
-    const whatsappUrl = `https://wa.me/${window.WHATSAPP_CONFIG?.phoneNumber || 'YOURWHATSAPPNUMBER'}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/923144781120?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 };
 
@@ -439,7 +482,7 @@ window.openWhatsAppChat = function(product) {
         window.WhatsAppManager.sendInquiryToWhatsApp(product);
     } else {
         const message = `I'm interested in your ${product.name} (${formatPrice(product.price)}). Can you provide more details?`;
-        const whatsappUrl = `https://wa.me/${window.WHATSAPP_CONFIG?.phoneNumber || 'YOURWHATSAPPNUMBER'}?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/923144781120?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     }
 };
@@ -447,3 +490,14 @@ window.openWhatsAppChat = function(product) {
 // Make functions available globally
 window.toggleFavorite = toggleFavorite;
 window.isFavorited = isFavorited;
+
+// Add to cart function for homepage cards
+function addToCartFromCard(product) {
+    if (window.CartManager) {
+        window.CartManager.addToCart(product, 1);
+        updateCartCount();
+    }
+}
+
+// Make function available globally
+window.addToCartFromCard = addToCartFromCard;

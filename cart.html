@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Premium Furniture Store</title>
+    <meta name="description" content="View and manage your shopping cart. Review items, update quantities, and place your order through WhatsApp.">
+    <meta name="keywords" content="shopping cart, furniture cart, order review, cart management">
+    
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="Shopping Cart - Premium Furniture Store">
+    <meta property="og:description" content="View and manage your shopping cart. Review items, update quantities, and place your order through WhatsApp.">
+    <meta property="og:image" content="images/cart-hero.jpg">
+    <meta property="og:url" content="https://your-furniture-store.github.io/cart.html">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Tailwind CSS Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased">
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923144781120" target="_blank"
+       class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 z-50 transform hover:scale-110" 
+       aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary-600">Furniture<span class="text-secondary-800">Store</span></h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                    <a href="shop.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Shop</a>
+                    <a href="about.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+                </nav>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-primary-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="shop.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Shop</a>
+                <a href="about.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="contact.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="bg-gray-50">
+        <!-- Cart Hero Section -->
+        <section class="bg-gradient-to-br from-primary-50 via-white to-secondary-50 py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Your Shopping Cart</h1>
+                    <p class="text-lg text-gray-600">Review your items and place your order</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Content -->
+        <section class="py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Cart Items -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-lg p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900">Cart Items</h2>
+                                <div class="text-gray-600">
+                                    <span id="cart-item-count">0</span> items
+                                </div>
+                            </div>
+                            
+                            <!-- Cart Items List -->
+                            <div id="cart-items" class="space-y-4">
+                                <!-- Cart items will be loaded here -->
+                            </div>
+                            
+                            <!-- Empty Cart State -->
+                            <div id="cart-empty" class="hidden text-center py-12">
+                                <div class="text-gray-400 mb-4">
+                                    <i class="fas fa-shopping-cart text-6xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h3>
+                                <p class="text-gray-600 mb-6">Add some furniture to your cart to get started</p>
+                                <a href="shop.html" class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300">
+                                    Continue Shopping
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Order Summary</h3>
+                            
+                            <div id="cart-total">
+                                <!-- Cart total will be loaded here -->
+                            </div>
+                            
+                            <div class="mt-6 space-y-4">
+                                <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                    <i class="fas fa-truck text-green-500"></i>
+                                    <span>Same day delivery available</span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                    <i class="fas fa-money-bill-wave text-blue-500"></i>
+                                    <span>Cash on delivery</span>
+                                </div>
+                                <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                    <i class="fas fa-shield-alt text-purple-500"></i>
+                                    <span>Secure checkout</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 space-y-4">
+                                <button onclick="CartManager.clearCart()" 
+                                        class="w-full bg-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-400 transition-all duration-300">
+                                    Clear Cart
+                                </button>
+                                <button onclick="CartManager.sendCartToWhatsApp()" 
+                                        class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    <i class="fab fa-whatsapp mr-2"></i>
+                                    Confirm Order
+                                </button>
+                            </div>
+                            
+                            <div class="mt-6 text-center text-sm text-gray-500">
+                                By placing your order, you agree to our terms and conditions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Continue Shopping Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Continue Shopping</h2>
+                <p class="text-lg text-gray-600 mb-8">Find more amazing furniture pieces</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Sofas -->
+                    <div class="group cursor-pointer" onclick="window.location.href='shop.html?category=sofas'">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-200 transition-colors">
+                                <i class="fas fa-couch text-primary-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Sofas</h3>
+                            <p class="text-gray-600 mb-6">Comfortable and stylish seating solutions</p>
+                            <div class="flex items-center justify-center text-primary-600 font-semibold">
+                                <span>Explore Collection</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Beds -->
+                    <div class="group cursor-pointer" onclick="window.location.href='shop.html?category=beds'">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-secondary-200 transition-colors">
+                                <i class="fas fa-bed text-secondary-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Beds</h3>
+                            <p class="text-gray-600 mb-6">Restful sleep with our premium bed collection</p>
+                            <div class="flex items-center justify-center text-secondary-600 font-semibold">
+                                <span>Explore Collection</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mattresses -->
+                    <div class="group cursor-pointer" onclick="window.location.href='shop.html?category=mattresses'">
+                        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-200 transition-colors">
+                                <i class="fas fa-bed text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Mattresses</h3>
+                            <p class="text-gray-600 mb-6">Perfect support for the best night's sleep</p>
+                            <div class="flex items-center justify-center text-green-600 font-semibold">
+                                <span>Explore Collection</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold text-primary-400 mb-4">Furniture<span class="text-white">Store</span></h3>
+                    <p class="text-gray-400 mb-6">Your trusted partner for premium furniture with fast delivery and excellent service.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="shop.html" class="hover:text-white transition-colors">Shop</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Return Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 FurnitureStore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/products.js"></script>
+    <script src="js/whatsapp.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/performance.js"></script>
+    
+    <script>
+        // Update cart item count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartCount = document.getElementById('cart-item-count');
+            if (cartCount) {
+                cartCount.textContent = CartManager.getCartCount();
+            }
+        });
+    </script>
+</body>
+</html>

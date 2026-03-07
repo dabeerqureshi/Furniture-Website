@@ -132,7 +132,7 @@ Furniture-Website/
 ### WhatsApp Integration
 Update the WhatsApp number in all HTML files:
 ```javascript
-// Replace YOURWHATSAPPNUMBER with your actual number
+// Replace 923144781120 with your actual number
 // Format: +[country code][number]
 // Example: +15551234567
 ```

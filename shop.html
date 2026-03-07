@@ -67,7 +67,7 @@
 </head>
 <body class="font-sans antialiased">
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/YOURWHATSAPPNUMBER" target="_blank" 
+    <a href="https://wa.me/923144781120" target="_blank"
        class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 z-50 transform hover:scale-110" 
        aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp text-2xl"></i>
@@ -91,6 +91,14 @@
                     <a href="about.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
                     <a href="contact.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
                 </nav>
+
+                <!-- Cart Button -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="cart.html" id="cart-button" class="relative text-gray-700 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
+                    </a>
+                </div>
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
@@ -402,6 +410,7 @@
     <!-- JavaScript -->
     <script src="js/products.js"></script>
     <script src="js/whatsapp.js"></script>
+    <script src="js/cart.js"></script>
     <script src="js/shop.js"></script>
     <script src="js/performance.js"></script>
 </body>
