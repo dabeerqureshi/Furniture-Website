@@ -67,6 +67,13 @@
             
             <form id="login-form" class="space-y-4">
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="admin-username" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                           placeholder="Enter username">
+                </div>
+                
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <input type="password" id="admin-password" required
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
@@ -77,7 +84,7 @@
                 
                 <button type="submit" 
                         class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Access Dashboard
+                    <i class="fas fa-sign-in-alt mr-2"></i>Access Dashboard
                 </button>
             </form>
         </div>
@@ -97,6 +104,7 @@
 
                     <div class="flex items-center space-x-4">
                         <span class="text-sm text-gray-600">Welcome, Admin</span>
+                        <span id="session-timer" class="text-sm text-gray-600">Auto-logout in: 30:00</span>
                         <button id="logout-btn" 
                                 class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors">
                             <i class="fas fa-sign-out-alt mr-2"></i>Logout
@@ -109,7 +117,19 @@
         <!-- Main Content -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Dashboard Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                            <p id="total-orders" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shopping-cart text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bg-white rounded-lg p-6 shadow">
                     <div class="flex items-center justify-between">
                         <div>
@@ -167,6 +187,207 @@
                             class="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
                         <i class="fas fa-plus mr-2"></i>Add New Product
                     </button>
+                </div>
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Sales Overview -->
+                <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Sales Overview</h3>
+                        <div class="flex space-x-2">
+                            <button id="analytics-today" class="analytics-tab active px-3 py-1 text-sm bg-primary-100 text-primary-700 rounded-full">Today</button>
+                            <button id="analytics-week" class="analytics-tab px-3 py-1 text-sm text-gray-600 hover:text-gray-900">This Week</button>
+                            <button id="analytics-month" class="analytics-tab px-3 py-1 text-sm text-gray-600 hover:text-gray-900">This Month</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="text-sm text-gray-600">Total Orders</div>
+                            <div id="analytics-orders" class="text-2xl font-bold text-blue-600">0</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <div class="text-sm text-gray-600">Total Revenue</div>
+                            <div id="analytics-revenue" class="text-2xl font-bold text-green-600">$0</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <div class="text-sm text-gray-600">Pending Orders</div>
+                            <div id="analytics-pending" class="text-2xl font-bold text-purple-600">0</div>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <div class="text-sm text-gray-600">Delivered</div>
+                            <div id="analytics-delivered" class="text-2xl font-bold text-orange-600">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Sales Chart Placeholder -->
+                    <div class="bg-gray-50 rounded-lg p-4 h-48 flex items-center justify-center">
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-chart-line text-4xl mb-2"></i>
+                            <p>Sales Analytics Chart</p>
+                            <p class="text-sm">Interactive charts coming soon</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <div class="text-sm text-gray-600">Best Selling</div>
+                                <div id="best-selling" class="font-medium">-</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-600">Orders</div>
+                                <div id="best-selling-count" class="font-medium text-green-600">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <div class="text-sm text-gray-600">Top Category</div>
+                                <div id="top-category" class="font-medium">-</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-600">Revenue</div>
+                                <div id="top-category-revenue" class="font-medium text-blue-600">$0</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <div class="text-sm text-gray-600">Active Customers</div>
+                                <div id="active-customers" class="font-medium">0</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-600">This Month</div>
+                                <div id="active-customers-count" class="font-medium text-purple-600">0</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <div class="text-sm text-gray-600">Avg Order Value</div>
+                                <div id="avg-order-value" class="font-medium">$0</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-600">Per Order</div>
+                                <div id="avg-order-value-amount" class="font-medium text-orange-600">$0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Analytics -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Customer Analytics</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Spent</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Order</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-analytics-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Customer analytics will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Inventory Analytics -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Popular Products -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Popular Products</h3>
+                    <div id="popular-products-list" class="space-y-3">
+                        <!-- Popular products will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Category Performance -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Category Performance</h3>
+                    <div id="category-performance-list" class="space-y-3">
+                        <!-- Category performance will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Export Section -->
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Data Export & Reports</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="adminManager.exportData('orders')" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export Orders
+                        </button>
+                        <button onclick="adminManager.exportData('customers')" 
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export Customers
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-900 mb-2">Export Orders</h4>
+                        <p class="text-sm text-gray-600">Download complete order history with customer details and order status</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-900 mb-2">Export Customers</h4>
+                        <p class="text-sm text-gray-600">Download customer database with order history and spending patterns</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-900 mb-2">Custom Reports</h4>
+                        <p class="text-sm text-gray-600">Generate custom reports based on date ranges and filters</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Management Section -->
+            <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900">Order Management</h3>
+                        <div class="flex space-x-2">
+                            <button id="refresh-orders-btn" 
+                                    class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-refresh mr-2"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

@@ -9,6 +9,8 @@ const PerformanceManager = {
         this.setupImageOptimization();
         this.setupIntersectionObserver();
         this.setupPerformanceMonitoring();
+        this.setupResourceHints();
+        this.setupPreloadCriticalResources();
     },
 
     // Setup lazy loading for images
@@ -344,8 +346,39 @@ const PerformanceManager = {
         // Clear unused data from memory
     },
 
-    // Preload critical resources
-    preloadCriticalResources() {
+    // Setup resource hints
+    setupResourceHints() {
+        // Preconnect to external domains
+        const domains = [
+            'https://cdn.tailwindcss.com',
+            'https://cdnjs.cloudflare.com',
+            'https://fonts.googleapis.com'
+        ];
+
+        domains.forEach(domain => {
+            const link = document.createElement('link');
+            link.rel = 'preconnect';
+            link.href = domain;
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+        });
+
+        // DNS prefetch for external resources
+        const dnsDomains = [
+            'fonts.gstatic.com',
+            'api.example.com'
+        ];
+
+        dnsDomains.forEach(domain => {
+            const link = document.createElement('link');
+            link.rel = 'dns-prefetch';
+            link.href = `//${domain}`;
+            document.head.appendChild(link);
+        });
+    },
+
+    // Setup preload critical resources
+    setupPreloadCriticalResources() {
         // Preload critical images
         const criticalImages = [
             'images/hero-bg.jpg',
@@ -366,6 +399,19 @@ const PerformanceManager = {
         criticalCSS.as = 'style';
         criticalCSS.href = 'css/style.css';
         document.head.appendChild(criticalCSS);
+
+        // Preload critical fonts
+        const fonts = [
+            'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+        ];
+
+        fonts.forEach(font => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'style';
+            link.href = font;
+            document.head.appendChild(link);
+        });
     }
 };
 

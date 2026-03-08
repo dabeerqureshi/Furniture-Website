@@ -666,3 +666,9 @@ const ProductManager = {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { products, ProductManager };
 }
+
+// Make ProductManager available globally for browser compatibility
+if (typeof window !== 'undefined') {
+    window.ProductManager = ProductManager;
+    window.products = products;
+}
