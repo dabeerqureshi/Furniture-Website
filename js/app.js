@@ -2,40 +2,86 @@
 // Handles homepage functionality, quick view modal, and global features
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components
+    // Initialize all components with proper error handling
     init();
 });
 
 function init() {
-    // Initialize mobile menu
-    initMobileMenu();
-    
-    // Initialize quick view modal
-    initQuickViewModal();
-    
-    // Initialize order modal
-    initOrderModal();
-    
-    // Initialize cart manager
-    if (window.CartManager) {
-        CartManager.init();
-        updateCartCount();
+    try {
+        // Initialize mobile menu
+        initMobileMenu();
+        
+        // Initialize quick view modal
+        initQuickViewModal();
+        
+        // Initialize order modal
+        initOrderModal();
+        
+        // Initialize cart manager with error handling
+        initCartManager();
+        
+        // Initialize homepage featured products
+        initFeaturedProducts();
+        
+        // Initialize favorites
+        initFavorites();
+        
+        // Initialize search functionality
+        initSearch();
+        
+        // Initialize category navigation
+        initCategoryNavigation();
+        
+        // Set up cart button event listener
+        setupCartButton();
+        
+        console.log('All components initialized successfully');
+    } catch (error) {
+        console.error('Error during initialization:', error);
+        showInitializationError(error);
     }
-    
-    // Initialize homepage featured products
-    initFeaturedProducts();
-    
-    // Initialize favorites
-    initFavorites();
-    
-    // Initialize search functionality
-    initSearch();
-    
-    // Initialize category navigation
-    initCategoryNavigation();
-    
-    // Set up cart button event listener
-    setupCartButton();
+}
+
+// Initialize cart manager with proper error handling
+function initCartManager() {
+    if (typeof window.CartManager !== 'undefined' && typeof CartManager.init === 'function') {
+        try {
+            CartManager.init();
+            updateCartCount();
+            console.log('Cart manager initialized successfully');
+        } catch (error) {
+            console.error('Error initializing cart manager:', error);
+        }
+    } else {
+        console.warn('CartManager not available or not properly initialized');
+    }
+}
+
+// Show initialization error to user
+function showInitializationError(error) {
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'bg-red-50 border border-red-200 rounded-lg p-6 m-6';
+        errorDiv.innerHTML = `
+            <div class="flex items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-semibold text-red-900">Application Error</h3>
+            </div>
+            <p class="text-red-700 mb-4">An error occurred while loading the application. Please refresh the page and try again.</p>
+            <div class="flex space-x-3">
+                <button onclick="window.location.reload()" 
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Refresh Page
+                </button>
+                <button onclick="console.log('Error details:', arguments[0])" 
+                        class="border border-red-300 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors">
+                    View Details
+                </button>
+            </div>
+        `;
+        mainContent.insertBefore(errorDiv, mainContent.firstChild);
+    }
 }
 
 // Mobile Menu Functionality
@@ -262,18 +308,75 @@ function processOrder() {
 function initFeaturedProducts() {
     const featuredProductsContainer = document.getElementById('featured-products');
     
-    if (featuredProductsContainer) {
+    if (!featuredProductsContainer) {
+        console.warn('Featured products container not found');
+        return;
+    }
+
+    // Check if ProductManager is available
+    if (typeof ProductManager === 'undefined') {
+        console.error('ProductManager is not available');
+        showFeaturedProductsError(featuredProductsContainer);
+        return;
+    }
+
+    try {
         const featuredProducts = ProductManager.getFeaturedProducts();
         
-        if (featuredProducts.length > 0) {
+        if (featuredProducts && featuredProducts.length > 0) {
             featuredProductsContainer.innerHTML = '';
             
-            featuredProducts.slice(0, 3).forEach(product => {
-                const productCard = createProductCard(product);
-                featuredProductsContainer.appendChild(productCard);
+            // Limit to first 3 featured products
+            const displayProducts = featuredProducts.slice(0, 3);
+            
+            displayProducts.forEach(product => {
+                try {
+                    const productCard = createProductCard(product);
+                    featuredProductsContainer.appendChild(productCard);
+                } catch (error) {
+                    console.error('Error creating product card:', error);
+                }
             });
+            
+            console.log(`Successfully loaded ${displayProducts.length} featured products`);
+        } else {
+            console.warn('No featured products found');
+            showNoFeaturedProducts(featuredProductsContainer);
         }
+    } catch (error) {
+        console.error('Error loading featured products:', error);
+        showFeaturedProductsError(featuredProductsContainer);
     }
+}
+
+// Show error state for featured products
+function showFeaturedProductsError(container) {
+    container.innerHTML = `
+        <div class="col-span-full text-center py-8">
+            <div class="text-red-500 mb-4">
+                <i class="fas fa-exclamation-triangle text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Unable to Load Featured Products</h3>
+            <p class="text-gray-600 mb-4">Please try refreshing the page or contact support if the problem persists.</p>
+            <button onclick="window.location.reload()" 
+                    class="bg-primary-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
+                Refresh Page
+            </button>
+        </div>
+    `;
+}
+
+// Show no products state
+function showNoFeaturedProducts(container) {
+    container.innerHTML = `
+        <div class="col-span-full text-center py-8">
+            <div class="text-gray-400 mb-4">
+                <i class="fas fa-box-open text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">No Featured Products</h3>
+            <p class="text-gray-600">Check back soon for our featured furniture selections.</p>
+        </div>
+    `;
 }
 
 function createProductCard(product) {
