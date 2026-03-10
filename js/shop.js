@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         card.innerHTML = `
             <div class="product-image-container relative group">
-                <img src="${product.images[0]}" alt="${product.name}" 
+                <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${product.name}" 
                      class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                      loading="lazy">
                 

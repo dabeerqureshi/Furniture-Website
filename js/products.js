@@ -112,7 +112,7 @@ const ProductManager = {
     // Add new product
     addProduct(productData) {
         // Generate new ID
-        const newId = Math.max(...products.map(p => p.id)) + 1;
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
         
         // Create new product object
         const newProduct = {
@@ -121,7 +121,7 @@ const ProductManager = {
             category: productData.category,
             price: parseFloat(productData.price),
             description: productData.description,
-            images: productData.images || [`images/${productData.category}/product-${newId}-1.jpg`],
+            images: productData.images || [],
             specifications: {
                 material: productData.specifications?.material || 'TBD',
                 color: productData.specifications?.color || 'TBD',
