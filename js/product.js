@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         productNameBreadcrumb.textContent = product.name;
 
         // Update main image
-        mainImage.src = product.images[0];
+        mainImage.src = product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/800x600?text=No+Image';
         mainImage.alt = product.name;
 
         // Update specifications
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         card.innerHTML = `
             <div class="relative">
-                <img src="${product.images[0]}" alt="${product.name}" 
+                <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${product.name}" 
                      class="w-full h-64 object-cover">
                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">Cash on Delivery</div>
             </div>

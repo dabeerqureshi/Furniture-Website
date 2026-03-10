@@ -68,48 +68,59 @@
 <body class="font-sans antialiased">
 
     <!-- Header -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
+            <div class="flex justify-between items-center h-16 sm:h-20">
                 <!-- Logo -->
-                <div class="flex items-center">
+                <div class="flex items-center flex-shrink-0">
                     <div class="flex-shrink-0">
-                        <h1 class="text-2xl font-bold text-primary-600">Furniture<span class="text-secondary-800">Store</span></h1>
+                        <h1 class="text-xl sm:text-2xl font-bold text-primary-600">Furniture<span class="text-secondary-800">Store</span></h1>
                     </div>
                 </div>
 
                 <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-8">
-                    <a href="index.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-                    <a href="shop.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Shop</a>
-                    <a href="about.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
-                    <a href="contact.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+                <nav class="hidden lg:flex space-x-6 xl:space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gray-50">Home</a>
+                    <a href="shop.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gray-50">Shop</a>
+                    <a href="about.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gray-50">About</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gray-50">Contact</a>
                 </nav>
 
-                <!-- Cart Button -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="cart.html" id="cart-button" class="relative text-gray-700 hover:text-primary-600 transition-colors">
-                        <i class="fas fa-shopping-cart text-2xl"></i>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">0</span>
+                <!-- Actions -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <!-- Cart Button -->
+                    <a href="cart.html" id="cart-button" class="relative text-gray-700 hover:text-primary-600 transition-colors p-2 sm:p-3 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-shopping-cart text-xl sm:text-2xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-primary-600 text-white text-xs rounded-full h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center font-bold hidden">0</span>
                     </a>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-700 hover:text-primary-600 focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
+                    
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-primary-600 focus:outline-none p-2 rounded-lg hover:bg-gray-50 transition-colors" aria-label="Toggle menu">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="index.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="shop.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Shop</a>
-                <a href="about.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="contact.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Contact</a>
+        <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 shadow-lg animate-in slide-in-from-top-2 duration-300">
+            <div class="px-4 py-4 space-y-2">
+                <a href="index.html" class="flex items-center space-x-3 text-gray-700 hover:text-primary-600 px-4 py-3 rounded-lg transition-colors hover:bg-gray-50">
+                    <i class="fas fa-home text-primary-600"></i>
+                    <span class="text-base font-medium">Home</span>
+                </a>
+                <a href="shop.html" class="flex items-center space-x-3 text-gray-700 hover:text-primary-600 px-4 py-3 rounded-lg transition-colors hover:bg-gray-50">
+                    <i class="fas fa-shopping-bag text-primary-600"></i>
+                    <span class="text-base font-medium">Shop</span>
+                </a>
+                <a href="about.html" class="flex items-center space-x-3 text-gray-700 hover:text-primary-600 px-4 py-3 rounded-lg transition-colors hover:bg-gray-50">
+                    <i class="fas fa-info-circle text-primary-600"></i>
+                    <span class="text-base font-medium">About</span>
+                </a>
+                <a href="contact.html" class="flex items-center space-x-3 text-gray-700 hover:text-primary-600 px-4 py-3 rounded-lg transition-colors hover:bg-gray-50">
+                    <i class="fas fa-envelope text-primary-600"></i>
+                    <span class="text-base font-medium">Contact</span>
+                </a>
             </div>
         </div>
     </header>

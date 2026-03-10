@@ -35,6 +35,9 @@ function init() {
         // Set up cart button event listener
         setupCartButton();
         
+        // Initialize responsive enhancements
+        initResponsiveEnhancements();
+        
         console.log('All components initialized successfully');
     } catch (error) {
         console.error('Error during initialization:', error);
@@ -42,46 +45,157 @@ function init() {
     }
 }
 
-// Initialize cart manager with proper error handling
-function initCartManager() {
-    if (typeof window.CartManager !== 'undefined' && typeof CartManager.init === 'function') {
-        try {
-            CartManager.init();
-            updateCartCount();
-            console.log('Cart manager initialized successfully');
-        } catch (error) {
-            console.error('Error initializing cart manager:', error);
+// Initialize responsive enhancements
+function initResponsiveEnhancements() {
+    // Enhanced mobile menu functionality
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuButton.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                // Remove overflow hidden when menu is closed
+                document.body.style.overflow = '';
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                // Prevent background scrolling when menu is open
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = '';
         }
-    } else {
-        console.warn('CartManager not available or not properly initialized');
+    });
+
+    // Close mobile menu when clicking on a link
+    if (mobileMenu) {
+        const menuLinks = mobileMenu.querySelectorAll('a');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                const icon = mobileMenuButton.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+            });
+        });
+    }
+
+    // Handle window resize for responsive adjustments
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            // Close mobile menu on desktop resize
+            if (window.innerWidth >= 1024 && mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                const icon = mobileMenuButton.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+            }
+        }, 250);
+    });
+
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Enhanced touch-friendly interactions
+    setupTouchInteractions();
+    
+    // Initialize lazy loading for images
+    initLazyLoading();
+    
+    // Initialize responsive typography scaling
+    initResponsiveTypography();
+}
+
+// Setup touch-friendly interactions
+function setupTouchInteractions() {
+    // Add touch feedback for buttons
+    document.querySelectorAll('button, .product-card, .filter-option').forEach(element => {
+        element.addEventListener('touchstart', function(e) {
+            this.style.transform = 'scale(0.98)';
+            this.style.transition = 'transform 0.1s ease';
+        }, { passive: true });
+        
+        element.addEventListener('touchend', function(e) {
+            this.style.transform = '';
+        }, { passive: true });
+    });
+}
+
+// Initialize lazy loading for images
+function initLazyLoading() {
+    if ('IntersectionObserver' in window) {
+        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+        
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    img.removeAttribute('loading');
+                    observer.unobserve(img);
+                }
+            });
+        });
+        
+        lazyImages.forEach(img => {
+            imageObserver.observe(img);
+        });
     }
 }
 
-// Show initialization error to user
-function showInitializationError(error) {
-    const mainContent = document.querySelector('main');
-    if (mainContent) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'bg-red-50 border border-red-200 rounded-lg p-6 m-6';
-        errorDiv.innerHTML = `
-            <div class="flex items-center mb-4">
-                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
-                <h3 class="text-lg font-semibold text-red-900">Application Error</h3>
-            </div>
-            <p class="text-red-700 mb-4">An error occurred while loading the application. Please refresh the page and try again.</p>
-            <div class="flex space-x-3">
-                <button onclick="window.location.reload()" 
-                        class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
-                    Refresh Page
-                </button>
-                <button onclick="console.log('Error details:', arguments[0])" 
-                        class="border border-red-300 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors">
-                    View Details
-                </button>
-            </div>
-        `;
-        mainContent.insertBefore(errorDiv, mainContent.firstChild);
+// Initialize responsive typography scaling
+function initResponsiveTypography() {
+    // Adjust font sizes based on viewport width for better readability
+    function adjustTypography() {
+        const viewportWidth = window.innerWidth;
+        const root = document.documentElement;
+        
+        if (viewportWidth < 480) {
+            // Small mobile devices
+            root.style.setProperty('--font-scale', '0.9');
+        } else if (viewportWidth < 768) {
+            // Mobile devices
+            root.style.setProperty('--font-scale', '0.95');
+        } else if (viewportWidth < 1024) {
+            // Tablets
+            root.style.setProperty('--font-scale', '1');
+        } else {
+            // Desktop
+            root.style.setProperty('--font-scale', '1');
+        }
     }
+    
+    adjustTypography();
+    window.addEventListener('resize', adjustTypography);
 }
 
 // Mobile Menu Functionality
@@ -138,7 +252,7 @@ function openQuickView(product) {
         const featuresContainer = document.getElementById('quick-view-features');
         const thumbnailsContainer = document.getElementById('quick-view-thumbnails');
         
-        if (mainImage) mainImage.src = product.images[0];
+        if (mainImage) mainImage.src = product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/800x600?text=No+Image';
         if (productName) productName.textContent = product.name;
         if (productPrice) productPrice.textContent = formatPrice(product.price);
         if (productDescription) productDescription.textContent = product.description;
@@ -400,9 +514,9 @@ function createProductCard(product) {
     
     const formattedPrice = formatPrice(product.price);
 
-    card.innerHTML = `
+        card.innerHTML = `
         <div class="product-image-container relative group">
-            <img src="${product.images[0]}" alt="${product.name}" 
+            <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${product.name}" 
                  class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                  loading="lazy">
             
@@ -555,6 +669,48 @@ function updateCartCount() {
         } else {
             cartCount.classList.add('hidden');
         }
+    }
+}
+
+// Cart manager initialization with error handling
+function initCartManager() {
+    if (typeof window.CartManager !== 'undefined' && typeof CartManager.init === 'function') {
+        try {
+            CartManager.init();
+            updateCartCount();
+            console.log('Cart manager initialized successfully');
+        } catch (error) {
+            console.error('Error initializing cart manager:', error);
+        }
+    } else {
+        console.warn('CartManager not available or not properly initialized');
+    }
+}
+
+// Show initialization error to user
+function showInitializationError(error) {
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'bg-red-50 border border-red-200 rounded-lg p-6 m-6';
+        errorDiv.innerHTML = `
+            <div class="flex items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-semibold text-red-900">Application Error</h3>
+            </div>
+            <p class="text-red-700 mb-4">An error occurred while loading the application. Please refresh the page and try again.</p>
+            <div class="flex space-x-3">
+                <button onclick="window.location.reload()" 
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Refresh Page
+                </button>
+                <button onclick="console.log('Error details:', arguments[0])" 
+                        class="border border-red-300 text-red-700 px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition-colors">
+                    View Details
+                </button>
+            </div>
+        `;
+        mainContent.insertBefore(errorDiv, mainContent.firstChild);
     }
 }
 

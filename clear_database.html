@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Database - Furniture Store</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        h1 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        p {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        
+        .warning {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .warning h3 {
+            margin: 0 0 0.5rem 0;
+            color: #92400e;
+        }
+        
+        .warning ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #9ca3af;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #6b7280;
+            transform: translateY(-2px);
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .status.success {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #22c55e;
+            display: block;
+        }
+        
+        .status.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clear Website Database</h1>
+        <p>This will permanently delete all products, orders, and customer data from the website.</p>
+        
+        <div class="warning">
+            <h3>⚠️ Important Warning</h3>
+            <ul>
+                <li>All products will be deleted</li>
+                <li>All customer orders will be deleted</li>
+                <li>All customer information will be deleted</li>
+                <li>This action cannot be undone</li>
+            </ul>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-danger" onclick="clearDatabase()">Yes, Clear Database</button>
+            <button class="btn-secondary" onclick="goBack()">Cancel</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        function clearDatabase() {
+            const status = document.getElementById('status');
+            
+            try {
+                // Clear all localStorage items used by the furniture store
+                const keysToClear = [
+                    'furnitureStoreProducts',  // Products data
+                    'orders',                  // Orders data
+                    'adminSession',           // Admin session
+                    'cart'                    // Shopping cart
+                ];
+                
+                let clearedCount = 0;
+                
+                keysToClear.forEach(key => {
+                    if (localStorage.getItem(key)) {
+                        localStorage.removeItem(key);
+                        clearedCount++;
+                    }
+                });
+                
+                // Also clear any other furniture store related data
+                const allKeys = Object.keys(localStorage);
+                allKeys.forEach(key => {
+                    if (key.includes('furniture') || key.includes('Furniture') || 
+                        key.includes('cart') || key.includes('order') || key.includes('admin')) {
+                        localStorage.removeItem(key);
+                        clearedCount++;
+                    }
+                });
+                
+                status.className = 'status success';
+                status.innerHTML = `
+                    <strong>✅ Database Cleared Successfully!</strong><br>
+                    Cleared ${clearedCount} data entries from localStorage.
+                `;
+                
+                // Show success for 3 seconds then redirect
+                setTimeout(() => {
+                    alert('Database has been cleared. You will be redirected to the admin panel.');
+                    window.location.href = 'admin.html';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Error clearing database:', error);
+                status.className = 'status error';
+                status.innerHTML = `
+                    <strong>❌ Error Clearing Database</strong><br>
+                    Please try again or clear your browser's localStorage manually.
+                `;
+            }
+        }
+        
+        function goBack() {
+            if (confirm('Are you sure you want to cancel?')) {
+                window.location.href = 'admin.html';
+            }
+        }
+        
+        // Also provide a direct link back to admin panel
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.container');
+            const link = document.createElement('p');
+            link.innerHTML = 'Or <a href="admin.html" style="color: #3b82f6; text-decoration: underline;">go back to admin panel</a>';
+            container.appendChild(link);
+        });
+    </script>
+</body>
+</html>

@@ -1326,12 +1326,17 @@ const AdminManager = {
         const images = [];
         for (let i = 1; i <= 3; i++) {
             const fileInput = document.getElementById(`image-${i}`);
+            const preview = document.getElementById(`preview-${i}`);
+            
             if (fileInput && fileInput.files[0]) {
-                // For demo purposes, we'll use placeholder image URLs
-                // In a real application, you would upload these to a server
-                images.push(`images/product-${Date.now()}-${i}.jpg`);
+                // Use the preview src if image was uploaded
+                if (preview && preview.src && !preview.classList.contains('hidden')) {
+                    images.push(preview.src);
+                }
             }
         }
+        
+        // If no images were uploaded, return empty array (will be handled by product display)
         return images;
     },
 
