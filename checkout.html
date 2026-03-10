@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Premium Furniture Store</title>
+    <meta name="description" content="Complete your furniture order with our secure checkout process. Cash on delivery available.">
+    <meta name="keywords" content="furniture checkout, order furniture, cash on delivery, furniture payment">
+    
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="Checkout - Premium Furniture Store">
+    <meta property="og:description" content="Complete your furniture order with our secure checkout process. Cash on delivery available.">
+    <meta property="og:image" content="images/checkout-hero.jpg">
+    <meta property="og:url" content="https://your-furniture-store.github.io/checkout.html">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Tailwind CSS Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased bg-gray-50">
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary-600">Furniture<span class="text-secondary-800">Store</span></h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                    <a href="shop.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Shop</a>
+                    <a href="about.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+                </nav>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-primary-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="shop.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Shop</a>
+                <a href="about.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="contact.html" class="block text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Checkout Form -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-shopping-cart text-primary-600"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Checkout</h1>
+                            <p class="text-gray-600">Complete your order</p>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
+                        <div id="checkout-items" class="space-y-4 mb-4">
+                            <!-- Items will be loaded here -->
+                        </div>
+                        <div class="border-t border-gray-200 pt-4">
+                            <div class="flex justify-between text-lg font-semibold text-gray-900 mb-2">
+                                <span>Subtotal:</span>
+                                <span id="checkout-subtotal">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-gray-600 mb-2">
+                                <span>Delivery Fee:</span>
+                                <span id="checkout-delivery">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-xl font-bold text-primary-600">
+                                <span>Total:</span>
+                                <span id="checkout-total">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Information Form -->
+                    <form id="checkout-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                                <input type="text" id="checkout-name" name="name" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input type="email" id="checkout-email" name="email" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input type="tel" id="checkout-phone" name="phone" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                <input type="text" id="checkout-city" name="city" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Postal Code</label>
+                                <input type="text" id="checkout-postal-code" name="postalCode" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                                <input type="text" id="checkout-country" name="country" value="Pakistan" required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Complete Address</label>
+                            <textarea id="checkout-address" name="address" rows="4" required
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                      placeholder="Enter your complete address including street, building, and any additional details"></textarea>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Method</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-primary-300 cursor-pointer">
+                                    <input type="radio" name="paymentMethod" value="cashOnDelivery" checked class="mr-4 accent-primary-600">
+                                    <div>
+                                        <div class="font-medium text-gray-900">Cash on Delivery</div>
+                                        <div class="text-sm text-gray-600">Pay when your order is delivered</div>
+                                    </div>
+                                    <i class="fas fa-money-bill-wave text-2xl text-green-600 ml-auto"></i>
+                                </label>
+                                
+                                <label class="flex items-center p-4 border border-gray-300 rounded-lg hover:border-primary-300 cursor-pointer">
+                                    <input type="radio" name="paymentMethod" value="bankTransfer" class="mr-4 accent-primary-600">
+                                    <div>
+                                        <div class="font-medium text-gray-900">Bank Transfer</div>
+                                        <div class="text-sm text-gray-600">Transfer payment to our bank account</div>
+                                    </div>
+                                    <i class="fas fa-university text-2xl text-blue-600 ml-auto"></i>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Order Notes -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Order Notes (Optional)</label>
+                            <textarea id="checkout-notes" name="notes" rows="3"
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                      placeholder="Any special instructions or delivery preferences..."></textarea>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="flex items-start space-x-3">
+                            <input type="checkbox" id="terms-agreement" name="termsAgreement" required class="mt-1 accent-primary-600">
+                            <label for="terms-agreement" class="text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-primary-600 hover:text-primary-700">terms and conditions</a> and 
+                                <a href="#" class="text-primary-600 hover:text-primary-700">privacy policy</a>. I understand that this is a cash on delivery order.
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button type="submit" id="place-order-btn"
+                                    class="flex-1 bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                <i class="fas fa-shopping-bag mr-2"></i>
+                                Place Order
+                            </button>
+                            <a href="cart.html" 
+                               class="flex-1 bg-gray-200 text-gray-700 py-4 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-300 text-center">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Back to Cart
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Details Sidebar -->
+                <div class="space-y-6">
+                    <!-- Delivery Information -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-truck text-green-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Delivery Information</h3>
+                        </div>
+                        <div class="space-y-3 text-gray-600">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-500"></i>
+                                <span>Same day delivery available</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-500"></i>
+                                <span>Cash on delivery accepted</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-check text-green-500"></i>
+                                <span>Professional assembly available</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Security -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-shield-alt text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Secure Checkout</h3>
+                        </div>
+                        <div class="space-y-3 text-gray-600">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-lock text-blue-500"></i>
+                                <span>Your information is secure</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-envelope text-blue-500"></i>
+                                <span>Order confirmation via email</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-phone text-blue-500"></i>
+                                <span>Customer support available</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Support -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-headset text-purple-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Need Help?</h3>
+                        </div>
+                        <div class="space-y-3 text-gray-600">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-phone text-purple-500"></i>
+                                <span>+1 (555) 123-4567</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-envelope text-purple-500"></i>
+                                <span>support@furniturestore.com</span>
+                            </div>
+                            <p class="text-sm mt-2">Available Mon-Fri, 9AM-6PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold text-primary-400 mb-4">Furniture<span class="text-white">Store</span></h3>
+                    <p class="text-gray-400 mb-6">Your trusted partner for premium furniture with fast delivery and excellent service.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="shop.html" class="hover:text-white transition-colors">Shop</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">FAQs</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Return Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 FurnitureStore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center animate-in slide-in-from-bottom-2 duration-300">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-green-600 text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h3>
+            <p class="text-gray-600 mb-6">Your order has been placed successfully! We will contact you shortly to complete the process.</p>
+            <div class="space-y-3">
+                <button id="close-success-modal" 
+                        class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300">
+                    Close
+                </button>
+                <a href="index.html" 
+                   class="block w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-300 text-center">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/cart.js"></script>
+    <script src="js/checkout.js"></script>
+    <script src="js/performance.js"></script>
+</body>
+</html>

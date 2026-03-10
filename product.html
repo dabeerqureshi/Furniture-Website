@@ -66,12 +66,6 @@
     </script>
 </head>
 <body class="font-sans antialiased">
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/923144781120" target="_blank"
-       class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 z-50 transform hover:scale-110" 
-       aria-label="Chat on WhatsApp">
-        <i class="fab fa-whatsapp text-2xl"></i>
-    </a>
 
     <!-- Header -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -202,10 +196,15 @@
                         <i class="fas fa-shopping-cart mr-2"></i>
                         Add to Cart
                     </button>
-                    <button id="whatsapp-chat-btn"
-                            class="flex-1 bg-green-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300">
-                        <i class="fab fa-whatsapp mr-2"></i>
-                        Chat on WhatsApp
+                    <button id="order-now-btn"
+                            class="flex-1 bg-red-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-shopping-bag mr-2"></i>
+                        Order Now
+                    </button>
+                    <button id="contact-btn"
+                            class="flex-1 bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Contact Us
                     </button>
                 </div>
 
@@ -373,7 +372,7 @@
                 <i class="fas fa-check text-green-600 text-2xl"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h3>
-            <p class="text-gray-600 mb-6">Your order has been sent to WhatsApp. Please complete the order with our representative.</p>
+            <p class="text-gray-600 mb-6">Your order has been placed successfully! We will contact you shortly to complete the process.</p>
             <button id="close-success-modal" 
                     class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300">
                 Close

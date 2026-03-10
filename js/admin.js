@@ -3,8 +3,8 @@
 
 // Admin Configuration
 const ADMIN_CONFIG = {
-    username: 'dabeer',
-    password: '2348',
+    username: 'admin',
+    password: 'secure123',
     localStorageKey: 'furnitureStoreProducts',
     sessionTimeout: 30 * 60 * 1000, // 30 minutes in milliseconds
     sessionKey: 'adminSession'
@@ -301,17 +301,36 @@ const AdminManager = {
 
         orders.forEach(order => {
             const row = document.createElement('tr');
-            const totalAmount = order.product.price * order.customer.quantity;
+            const totalAmount = order.total;
+            
+            // Handle different order structures
+            const customerName = order.name || order.customer?.name || 'Unknown';
+            const customerPhone = order.phone || order.customer?.phone || 'Unknown';
+            const customerEmail = order.email || order.customer?.email || 'Unknown';
+            const customerCity = order.city || order.customer?.city || 'Unknown';
+            const customerAddress = order.address || order.customer?.address || 'Unknown';
+            
+            // Get first item details
+            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+            const itemName = firstItem ? firstItem.name : 'Unknown Product';
+            const itemQuantity = firstItem ? firstItem.quantity : 0;
+            const itemImage = firstItem ? firstItem.image : '';
             
             row.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${order.id}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${order.orderNumber || order.id || 'N/A'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div class="font-medium">${order.customer.name}</div>
-                    <div class="text-gray-500">${order.customer.phone}</div>
+                    <div class="font-medium">${customerName}</div>
+                    <div class="text-gray-500">${customerPhone}</div>
+                    <div class="text-gray-500 text-xs">${customerEmail}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div class="font-medium">${order.product.name}</div>
-                    <div class="text-gray-500">${order.customer.quantity}x</div>
+                    <div class="flex items-center space-x-2">
+                        ${itemImage ? `<img src="${itemImage}" alt="${itemName}" class="w-8 h-8 object-cover rounded">` : `<div class="w-8 h-8 bg-gray-200 rounded"></div>`}
+                        <div>
+                            <div class="font-medium">${itemName}</div>
+                            <div class="text-gray-500">${itemQuantity}x</div>
+                        </div>
+                    </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
                     ${this.formatCurrency(totalAmount)}
@@ -322,29 +341,29 @@ const AdminManager = {
                     </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${this.formatDate(order.timestamp)}
+                    ${this.formatDate(order.orderDate || order.timestamp)}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                    <button onclick="adminManager.viewOrderDetails('${order.id}')" 
+                    <button onclick="adminManager.viewOrderDetails('${order.orderNumber || order.id}')" 
                             class="text-blue-600 hover:text-blue-900">
                         <i class="fas fa-eye"></i> View
                     </button>
                     ${order.status !== 'delivered' && order.status !== 'cancelled' ? `
-                        <button onclick="adminManager.updateOrderStatus('${order.id}', 'confirmed')" 
+                        <button onclick="adminManager.updateOrderStatus('${order.orderNumber || order.id}', 'confirmed')" 
                                 class="text-green-600 hover:text-green-900">
                             <i class="fas fa-check"></i> Confirm
                         </button>
-                        <button onclick="adminManager.updateOrderStatus('${order.id}', 'in_transit')" 
+                        <button onclick="adminManager.updateOrderStatus('${order.orderNumber || order.id}', 'in_transit')" 
                                 class="text-purple-600 hover:text-purple-900">
                             <i class="fas fa-truck"></i> Transit
                         </button>
-                        <button onclick="adminManager.updateOrderStatus('${order.id}', 'delivered')" 
+                        <button onclick="adminManager.updateOrderStatus('${order.orderNumber || order.id}', 'delivered')" 
                                 class="text-green-600 hover:text-green-900">
                             <i class="fas fa-box"></i> Deliver
                         </button>
                     ` : ''}
                     ${order.status !== 'cancelled' ? `
-                        <button onclick="adminManager.updateOrderStatus('${order.id}', 'cancelled')" 
+                        <button onclick="adminManager.updateOrderStatus('${order.orderNumber || order.id}', 'cancelled')" 
                                 class="text-red-600 hover:text-red-900">
                             <i class="fas fa-times"></i> Cancel
                         </button>
@@ -356,9 +375,9 @@ const AdminManager = {
     },
 
     // View order details
-    viewOrderDetails(orderId) {
+    viewOrderDetails(orderNumber) {
         const orders = this.getAllOrders();
-        const order = orders.find(o => o.id === orderId);
+        const order = orders.find(o => o.orderNumber === orderNumber);
         
         if (!order) {
             this.showMessage('Order not found.', 'error');
@@ -381,35 +400,36 @@ const AdminManager = {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-50 p-4 rounded-lg">
                         <h4 class="font-semibold text-gray-900 mb-2">Order Information</h4>
-                        <p><span class="text-gray-600">Order ID:</span> <span class="font-medium">${order.id}</span></p>
+                        <p><span class="text-gray-600">Order Number:</span> <span class="font-medium">${order.orderNumber}</span></p>
                         <p><span class="text-gray-600">Status:</span> 
                             <span class="px-2 py-1 rounded-full text-xs font-semibold ${this.getOrderStatusClass(order.status)}">
                                 ${this.getOrderStatusText(order.status)}
                             </span>
                         </p>
-                        <p><span class="text-gray-600">Date:</span> <span class="font-medium">${this.formatDate(order.timestamp)}</span></p>
+                        <p><span class="text-gray-600">Date:</span> <span class="font-medium">${this.formatDate(order.orderDate)}</span></p>
                         ${order.updatedAt ? `<p><span class="text-gray-600">Updated:</span> <span class="font-medium">${this.formatDate(order.updatedAt)}</span></p>` : ''}
                     </div>
                     
                     <div class="bg-gray-50 p-4 rounded-lg">
                         <h4 class="font-semibold text-gray-900 mb-2">Customer Information</h4>
-                        <p><span class="text-gray-600">Name:</span> <span class="font-medium">${order.customer.name}</span></p>
-                        <p><span class="text-gray-600">Email:</span> <span class="font-medium">${order.customer.email}</span></p>
-                        <p><span class="text-gray-600">Phone:</span> <span class="font-medium">${order.customer.phone}</span></p>
-                        <p><span class="text-gray-600">City:</span> <span class="font-medium">${order.customer.city}</span></p>
-                        <p><span class="text-gray-600">Address:</span> <span class="font-medium">${order.customer.address}</span></p>
+                        <p><span class="text-gray-600">Name:</span> <span class="font-medium">${order.name}</span></p>
+                        <p><span class="text-gray-600">Email:</span> <span class="font-medium">${order.email}</span></p>
+                        <p><span class="text-gray-600">Phone:</span> <span class="font-medium">${order.phone}</span></p>
+                        <p><span class="text-gray-600">City:</span> <span class="font-medium">${order.city}</span></p>
+                        <p><span class="text-gray-600">Address:</span> <span class="font-medium">${order.address}</span></p>
                     </div>
                     
                     <div class="bg-gray-50 p-4 rounded-lg">
                         <h4 class="font-semibold text-gray-900 mb-2">Product Information</h4>
-                        <div class="flex items-center space-x-3">
-                            <img src="${order.product.images[0]}" alt="${order.product.name}" class="w-16 h-16 object-cover rounded">
-                            <div>
-                                <p class="font-medium">${order.product.name}</p>
-                                <p class="text-gray-600">${order.product.category}</p>
-                                <p class="text-gray-600">${this.formatCurrency(order.product.price)} x ${order.customer.quantity}</p>
+                        ${order.items.map(item => `
+                            <div class="flex items-center space-x-3 mb-3">
+                                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                                <div>
+                                    <p class="font-medium">${item.name}</p>
+                                    <p class="text-gray-600">${this.formatCurrency(item.price)} x ${item.quantity}</p>
+                                </div>
                             </div>
-                        </div>
+                        `).join('')}
                     </div>
                     
                     <div class="bg-gray-50 p-4 rounded-lg">
@@ -417,15 +437,15 @@ const AdminManager = {
                         <div class="space-y-2">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Subtotal:</span>
-                                <span class="font-medium">${this.formatCurrency(order.product.price * order.customer.quantity)}</span>
+                                <span class="font-medium">${this.formatCurrency(order.subtotal)}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Delivery:</span>
-                                <span class="font-medium">Free</span>
+                                <span class="text-gray-600">Delivery Fee:</span>
+                                <span class="font-medium">${this.formatCurrency(order.deliveryFee)}</span>
                             </div>
                             <div class="flex justify-between border-t pt-2">
                                 <span class="font-semibold">Total:</span>
-                                <span class="font-semibold">${this.formatCurrency(order.product.price * order.customer.quantity)}</span>
+                                <span class="font-semibold">${this.formatCurrency(order.total)}</span>
                             </div>
                         </div>
                     </div>
@@ -436,10 +456,12 @@ const AdminManager = {
                             class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors">
                         Close
                     </button>
-                    <button onclick="adminManager.updateOrderStatus('${order.id}', 'delivered'); this.closest('.fixed').remove()" 
-                            class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
-                        Mark as Delivered
-                    </button>
+                    ${order.status !== 'delivered' && order.status !== 'cancelled' ? `
+                        <button onclick="adminManager.updateOrderStatus('${order.orderNumber}', 'delivered'); this.closest('.fixed').remove()" 
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                            Mark as Delivered
+                        </button>
+                    ` : ''}
                 </div>
             </div>
         `;
@@ -454,20 +476,56 @@ const AdminManager = {
     },
 
     // Update order status
-    updateOrderStatus(orderId, status) {
+    updateOrderStatus(orderNumber, status) {
         const orders = this.getAllOrders();
-        const orderIndex = orders.findIndex(order => order.id === orderId);
+        const orderIndex = orders.findIndex(order => order.orderNumber === orderNumber);
         
         if (orderIndex !== -1) {
             orders[orderIndex].status = status;
             orders[orderIndex].updatedAt = new Date().toISOString();
-            localStorage.setItem('orders', JSON.stringify(orders));
+        localStorage.setItem('orders', JSON.stringify(orders));
             this.loadOrders();
             this.showMessage('Order status updated successfully!', 'success');
+            
+            // Send email notification if order is confirmed
+            if (status === 'confirmed') {
+                this.sendOrderConfirmationEmail(orders[orderIndex]);
+            }
+            
             return true;
         }
         
         return false;
+    },
+
+    // Send order confirmation email
+    sendOrderConfirmationEmail(order) {
+        // EmailJS template for order confirmation
+        const templateParams = {
+            to_name: order.name,
+            to_email: order.email,
+            order_number: order.orderNumber,
+            order_date: new Date(order.orderDate).toLocaleDateString(),
+            items: order.items.map(item => `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n'),
+            subtotal: `$${order.subtotal.toFixed(2)}`,
+            delivery_fee: `$${order.deliveryFee.toFixed(2)}`,
+            total: `$${order.total.toFixed(2)}`,
+            customer_name: order.name,
+            customer_email: order.email,
+            customer_phone: order.phone,
+            customer_address: order.address,
+            payment_method: order.paymentMethod === 'cashOnDelivery' ? 'Cash on Delivery' : 'Bank Transfer'
+        };
+        
+        // Note: In a real implementation, you would use your EmailJS service ID and template ID
+        // emailjs.send('YOUR_SERVICE_ID', 'order_confirmation_template', templateParams)
+        //     .then(function(response) {
+        //         console.log('Order confirmation email sent successfully:', response.status, response.text);
+        //     }, function(error) {
+        //         console.error('Failed to send order confirmation email:', error);
+        //     });
+        
+        console.log('Order confirmation email would be sent:', templateParams);
     },
 
     // Get order status badge class
@@ -520,19 +578,33 @@ const AdminManager = {
         const customers = {};
         
         orders.forEach(order => {
-            const customerId = order.customer.phone;
+            // Handle different order structures
+            const customerId = order.phone || order.customer?.phone || order.email || order.customer?.email;
+            if (!customerId) return;
+            
             if (!customers[customerId]) {
                 customers[customerId] = {
-                    ...order.customer,
+                    name: order.name || order.customer?.name || 'Unknown',
+                    email: order.email || order.customer?.email || 'Unknown',
+                    phone: order.phone || order.customer?.phone || 'Unknown',
+                    city: order.city || order.customer?.city || 'Unknown',
+                    address: order.address || order.customer?.address || 'Unknown',
                     orderCount: 0,
                     totalSpent: 0,
-                    lastOrder: order.timestamp
+                    lastOrder: order.orderDate || order.timestamp
                 };
             }
+            
             customers[customerId].orderCount++;
-            customers[customerId].totalSpent += order.product.price * order.customer.quantity;
-            if (order.timestamp > customers[customerId].lastOrder) {
-                customers[customerId].lastOrder = order.timestamp;
+            
+            // Calculate total spent from items
+            if (order.items && order.items.length > 0) {
+                const orderTotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                customers[customerId].totalSpent += orderTotal;
+            }
+            
+            if ((order.orderDate || order.timestamp) > customers[customerId].lastOrder) {
+                customers[customerId].lastOrder = order.orderDate || order.timestamp;
             }
         });
 
@@ -563,54 +635,67 @@ const AdminManager = {
         };
 
         orders.forEach(order => {
-            const orderDate = new Date(order.timestamp);
-            const orderAmount = order.product.price * order.customer.quantity;
-            
-            stats.totalRevenue += orderAmount;
+            // Process each item in the order
+            if (order.items && order.items.length > 0) {
+                const orderDate = new Date(order.orderDate || order.timestamp);
+                let orderAmount = 0;
 
-            if (order.status === 'pending') stats.pendingOrders++;
-            if (order.status === 'delivered') stats.deliveredOrders++;
+                // Calculate total order amount from items
+                order.items.forEach(item => {
+                    const itemAmount = item.price * item.quantity;
+                    orderAmount += itemAmount;
+                    
+                    // Only include sofa items in analytics
+                    if (item.category === 'sofas') {
+                        // Popular products (only sofas)
+                        if (!stats.popularProducts[item.name]) {
+                            stats.popularProducts[item.name] = {
+                                name: item.name,
+                                category: item.category,
+                                count: 0,
+                                revenue: 0
+                            };
+                        }
+                        stats.popularProducts[item.name].count += item.quantity;
+                        stats.popularProducts[item.name].revenue += itemAmount;
 
-            // Today's stats
-            if (orderDate.toDateString() === today.toDateString()) {
-                stats.todayOrders++;
-                stats.todayRevenue += orderAmount;
+                        // Category sales (only sofas)
+                        const category = 'sofas';
+                        if (!stats.categorySales[category]) {
+                            stats.categorySales[category] = {
+                                category: category,
+                                count: 0,
+                                revenue: 0
+                            };
+                        }
+                        stats.categorySales[category].count += item.quantity;
+                        stats.categorySales[category].revenue += itemAmount;
+                    }
+                });
+
+                stats.totalRevenue += orderAmount;
+
+                if (order.status === 'pending') stats.pendingOrders++;
+                if (order.status === 'delivered') stats.deliveredOrders++;
+
+                // Today's stats
+                if (orderDate.toDateString() === today.toDateString()) {
+                    stats.todayOrders++;
+                    stats.todayRevenue += orderAmount;
+                }
+
+                // This week's stats
+                if (orderDate >= thisWeekStart) {
+                    stats.weekOrders++;
+                    stats.weekRevenue += orderAmount;
+                }
+
+                // This month's stats
+                if (orderDate >= thisMonthStart) {
+                    stats.monthOrders++;
+                    stats.monthRevenue += orderAmount;
+                }
             }
-
-            // This week's stats
-            if (orderDate >= thisWeekStart) {
-                stats.weekOrders++;
-                stats.weekRevenue += orderAmount;
-            }
-
-            // This month's stats
-            if (orderDate >= thisMonthStart) {
-                stats.monthOrders++;
-                stats.monthRevenue += orderAmount;
-            }
-
-            // Popular products
-            if (!stats.popularProducts[order.product.name]) {
-                stats.popularProducts[order.product.name] = {
-                    name: order.product.name,
-                    category: order.product.category,
-                    count: 0,
-                    revenue: 0
-                };
-            }
-            stats.popularProducts[order.product.name].count++;
-            stats.popularProducts[order.product.name].revenue += orderAmount;
-
-            // Category sales
-            if (!stats.categorySales[order.product.category]) {
-                stats.categorySales[order.product.category] = {
-                    category: order.product.category,
-                    count: 0,
-                    revenue: 0
-                };
-            }
-            stats.categorySales[order.product.category].count++;
-            stats.categorySales[order.product.category].revenue += orderAmount;
         });
 
         // Convert objects to sorted arrays
@@ -630,9 +715,18 @@ const AdminManager = {
         const orders = this.getAllOrders();
         
         const inventory = products.map(product => {
-            const totalOrdered = orders
-                .filter(order => order.product.id === product.id)
-                .reduce((sum, order) => sum + order.customer.quantity, 0);
+            // Calculate total ordered from all orders
+            let totalOrdered = 0;
+            
+            orders.forEach(order => {
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach(item => {
+                        if (item.id === product.id) {
+                            totalOrdered += item.quantity;
+                        }
+                    });
+                }
+            });
             
             return {
                 ...product,
@@ -652,20 +746,36 @@ const AdminManager = {
 
         if (type === 'orders') {
             const orders = this.getAllOrders();
-            data = orders.map(order => ([
-                order.id,
-                order.customer.name,
-                order.customer.phone,
-                order.customer.email,
-                order.product.name,
-                order.customer.quantity,
-                this.formatCurrency(order.product.price),
-                this.formatCurrency(order.product.price * order.customer.quantity),
-                this.getOrderStatusText(order.status),
-                this.formatDate(order.timestamp)
-            ]));
+            data = orders.map(order => {
+                // Handle different order structures
+                const customerName = order.name || order.customer?.name || 'Unknown';
+                const customerPhone = order.phone || order.customer?.phone || 'Unknown';
+                const customerEmail = order.email || order.customer?.email || 'Unknown';
+                const customerCity = order.city || order.customer?.city || 'Unknown';
+                const customerAddress = order.address || order.customer?.address || 'Unknown';
+                
+                // Get first item details
+                const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+                const itemName = firstItem ? firstItem.name : 'Unknown Product';
+                const itemQuantity = firstItem ? firstItem.quantity : 0;
+                const itemPrice = firstItem ? firstItem.price : 0;
+                const itemTotal = itemPrice * itemQuantity;
+                
+                return [
+                    order.orderNumber || order.id || 'N/A',
+                    customerName,
+                    customerPhone,
+                    customerEmail,
+                    itemName,
+                    itemQuantity,
+                    this.formatCurrency(itemPrice),
+                    this.formatCurrency(itemTotal),
+                    this.getOrderStatusText(order.status),
+                    this.formatDate(order.orderDate || order.timestamp)
+                ];
+            });
             filename = `orders_export_${new Date().toISOString().slice(0, 10)}.csv`;
-            data.unshift(['Order ID', 'Customer Name', 'Phone', 'Email', 'Product', 'Quantity', 'Unit Price', 'Total', 'Status', 'Date']);
+            data.unshift(['Order Number', 'Customer Name', 'Phone', 'Email', 'Product', 'Quantity', 'Unit Price', 'Total', 'Status', 'Date']);
         } else if (type === 'customers') {
             const customers = this.getCustomerManagementData();
             data = customers.map(customer => ([
@@ -701,13 +811,24 @@ const AdminManager = {
         const orders = this.getAllOrders();
         const q = query.toLowerCase();
         
-        return orders.filter(order => 
-            order.id.toLowerCase().includes(q) ||
-            order.customer.name.toLowerCase().includes(q) ||
-            order.customer.phone.includes(q) ||
-            order.product.name.toLowerCase().includes(q) ||
-            order.status.includes(q)
-        );
+        return orders.filter(order => {
+            // Handle different order structures
+            const customerName = order.name || order.customer?.name || '';
+            const customerPhone = order.phone || order.customer?.phone || '';
+            const customerEmail = order.email || order.customer?.email || '';
+            const orderNumber = order.orderNumber || order.id || '';
+            
+            // Get first item details
+            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+            const itemName = firstItem ? firstItem.name : '';
+            
+            return orderNumber.toLowerCase().includes(q) ||
+                   customerName.toLowerCase().includes(q) ||
+                   customerPhone.includes(q) ||
+                   customerEmail.toLowerCase().includes(q) ||
+                   itemName.toLowerCase().includes(q) ||
+                   order.status.toLowerCase().includes(q);
+        });
     },
 
     // Filter orders by status
@@ -724,7 +845,7 @@ const AdminManager = {
         const end = new Date(endDate);
         
         return orders.filter(order => {
-            const orderDate = new Date(order.timestamp);
+            const orderDate = new Date(order.orderDate || order.timestamp);
             return orderDate >= start && orderDate <= end;
         });
     },
@@ -1122,7 +1243,6 @@ const AdminManager = {
 
     // Handle product form submission
     handleProductSubmit() {
-        const formData = new FormData();
         const productData = this.getFormData();
 
         if (!this.validateProductData(productData)) {
@@ -1130,18 +1250,23 @@ const AdminManager = {
             return;
         }
 
-        if (productData.id) {
-            // Update existing product
-            ProductManager.updateProduct(productData.id, productData);
-            this.showMessage('Product updated successfully!', 'success');
-        } else {
-            // Add new product
-            ProductManager.addProduct(productData);
-            this.showMessage('Product added successfully!', 'success');
-        }
+        try {
+            if (productData.id) {
+                // Update existing product
+                ProductManager.updateProduct(productData.id, productData);
+                this.showMessage('Product updated successfully!', 'success');
+            } else {
+                // Add new product
+                ProductManager.addProduct(productData);
+                this.showMessage('Product added successfully!', 'success');
+            }
 
-        this.closeProductModal();
-        this.loadDashboard();
+            this.closeProductModal();
+            this.loadDashboard();
+        } catch (error) {
+            console.error('Error saving product:', error);
+            this.showMessage('Error saving product: ' + error.message, 'error');
+        }
     },
 
     // Get form data

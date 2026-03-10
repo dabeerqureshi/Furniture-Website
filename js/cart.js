@@ -1,5 +1,5 @@
 // Shopping Cart JavaScript
-// Handles cart functionality, local storage, and WhatsApp order processing
+// Handles cart functionality, local storage, and checkout order processing
 
 // Cart Manager
 const CartManager = {
@@ -79,223 +79,26 @@ const CartManager = {
         return cart.reduce((count, item) => count + item.quantity, 0);
     },
     
-    // Send cart order to WhatsApp
-    sendCartToWhatsApp() {
+    // Send cart order to checkout
+    sendCartToCheckout() {
         const cart = this.getCart();
         if (cart.length === 0) {
             alert('Your cart is empty!');
             return;
         }
         
-        // Show checkout form modal
-        this.showCheckoutForm();
-    },
-    
-    // Show checkout form modal
-    showCheckoutForm() {
-        const modal = document.getElementById('checkout-modal');
-        if (!modal) {
-            this.createCheckoutModal();
-        } else {
-            modal.classList.remove('hidden');
-        }
-    },
-    
-    // Create checkout modal
-    createCheckoutModal() {
-        const modal = document.createElement('div');
-        modal.id = 'checkout-modal';
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden overflow-y-auto';
-        modal.innerHTML = `
-            <div class="bg-white rounded-2xl max-w-md w-full mx-auto my-4 p-4 sm:p-6 relative animate-in slide-in-from-bottom-2 duration-300 max-h-[90vh] overflow-y-auto">
-                <button id="close-checkout-modal" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-600 z-10 bg-white rounded-full p-1 sm:p-2 shadow-md">
-                    <i class="fas fa-times text-xl sm:text-2xl"></i>
-                </button>
-                
-                <div class="text-center mb-4 sm:mb-6 mt-2">
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Checkout</h3>
-                    <p class="text-sm sm:text-base text-gray-600">Fill in your details to place your order</p>
-                </div>
-                
-                <form id="checkout-form" class="space-y-3 sm:space-y-4">
-                    <input type="hidden" id="checkout-products">
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                        <input type="text" id="checkout-name" required
-                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                        <input type="email" id="checkout-email" required
-                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                        <input type="tel" id="checkout-phone" required
-                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
-                        <input type="text" id="checkout-city" required
-                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Postal Code</label>
-                        <input type="text" id="checkout-postal-code" required
-                               class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                        <textarea id="checkout-address" required rows="3"
-                                  class="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"></textarea>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm sm:text-base text-gray-600">Items:</span>
-                            <span id="checkout-items-count" class="font-semibold">0</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm sm:text-base text-gray-600">Subtotal:</span>
-                            <span id="checkout-subtotal" class="font-semibold">$0</span>
-                        </div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm sm:text-base text-gray-600">Delivery:</span>
-                            <span class="text-green-600 font-semibold">Free</span>
-                        </div>
-                        <div class="flex justify-between items-center border-t border-gray-300 pt-2">
-                            <span class="text-sm sm:text-base text-gray-600 font-medium">Total:</span>
-                            <span id="checkout-total" class="text-lg sm:text-xl font-bold text-primary-600">$0</span>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" 
-                            class="w-full bg-primary-600 text-white py-2 sm:py-3 px-4 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        Checkout via WhatsApp
-                    </button>
-                </form>
-            </div>
-        `;
+        // Store cart in session storage for checkout
+        sessionStorage.setItem('checkout_cart', JSON.stringify(cart));
         
-        document.body.appendChild(modal);
-        this.setupCheckoutForm();
-        this.updateCheckoutForm();
-        modal.classList.remove('hidden');
-    },
-    
-    // Setup checkout form
-    setupCheckoutForm() {
-        const form = document.getElementById('checkout-form');
-        const closeModalBtn = document.getElementById('close-checkout-modal');
-        const modal = document.getElementById('checkout-modal');
-        
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.processCheckout();
-            });
-        }
-        
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-        }
-        
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        }
-    },
-    
-    // Update checkout form with cart data
-    updateCheckoutForm() {
-        const cart = this.getCart();
-        const itemsCount = this.getCartCount();
-        const subtotal = this.getCartTotal();
-        const total = subtotal; // No delivery fee
-        
-        document.getElementById('checkout-items-count').textContent = itemsCount;
-        document.getElementById('checkout-subtotal').textContent = `$${subtotal}`;
-        document.getElementById('checkout-total').textContent = `$${total}`;
-    },
-    
-    // Process checkout
-    processCheckout() {
-        const form = document.getElementById('checkout-form');
-        const customer = {
-            name: document.getElementById('checkout-name').value,
-            email: document.getElementById('checkout-email').value,
-            phone: document.getElementById('checkout-phone').value,
-            city: document.getElementById('checkout-city').value,
-            postalCode: document.getElementById('checkout-postal-code').value,
-            address: document.getElementById('checkout-address').value
-        };
-        
-        // Validate required fields
-        if (!customer.name || !customer.email || !customer.phone || !customer.city || !customer.postalCode || !customer.address) {
-            alert('Please fill in all required fields.');
-            return;
-        }
-        
-        const cart = this.getCart();
-        const total = this.getCartTotal();
-        
-        // Generate WhatsApp message with customer details
-        const message = this.generateCheckoutMessage(cart, customer, total);
-        const whatsappUrl = `https://wa.me/923144781120?text=${encodeURIComponent(message)}`;
-        
-        // Open WhatsApp in new tab
-        window.open(whatsappUrl, '_blank');
-        
-        // Clear cart after sending order
-        this.clearCart();
-        
-        // Close modal
-        document.getElementById('checkout-modal').classList.add('hidden');
-        
-        // Show success message
-        this.showSuccessMessage();
-    },
-    
-    // Generate checkout message with customer details
-    generateCheckoutMessage(cart, customer, total) {
-        let message = `NEW FURNITURE ORDER FROM CART\n\n`;
-        
-        cart.forEach((item, index) => {
-            const itemTotal = item.price * item.quantity;
-            message += `${index + 1}. ${item.name}\n`;
-            message += `   Price: $${item.price}\n`;
-            message += `   Quantity: ${item.quantity}\n`;
-            message += `   Total: $${itemTotal}\n\n`;
-        });
-        
-        message += `SUBTOTAL: $${total}\n`;
-        message += `Payment Method: Cash on Delivery\n`;
-        message += `Delivery: Same Day (if available)\n\n`;
-        message += `Customer Details:\n`;
-        message += `Name: ${customer.name}\n`;
-        message += `Email: ${customer.email}\n`;
-        message += `Phone: ${customer.phone}\n`;
-        message += `City: ${customer.city}\n`;
-        message += `Postal Code: ${customer.postalCode}\n`;
-        message += `Address: ${customer.address}\n\n`;
-        message += `Thank you for your order! We will contact you shortly.`;
-        
-        return message;
+        // Redirect to checkout page
+        window.location.href = 'checkout.html';
     },
     
     // Update cart UI elements
     updateCartUI() {
+        // Clean up cart first to remove any unavailable products
+        this.cleanCart();
+        
         // Update cart count in header
         const cartCount = document.getElementById('cart-count');
         if (cartCount) {
@@ -356,9 +159,9 @@ const CartManager = {
                             class="flex-1 bg-primary-600 text-white py-2 px-4 rounded hover:bg-primary-700">
                         View Cart
                     </button>
-                    <button onclick="CartManager.sendCartToWhatsApp()" 
+                    <button onclick="CartManager.sendCartToCheckout()" 
                             class="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
-                        Order Now
+                        Checkout
                     </button>
                 </div>
             </div>
@@ -437,9 +240,9 @@ const CartManager = {
                                 class="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-400">
                             Clear Cart
                         </button>
-                        <button onclick="CartManager.sendCartToWhatsApp()" 
+                        <button onclick="CartManager.sendCartToCheckout()" 
                                 class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700">
-                            Confirm Order
+                            Checkout
                         </button>
                     </div>
                 </div>
@@ -499,6 +302,35 @@ const CartManager = {
                 notification.remove();
             }, 300);
         }, 4000);
+    },
+
+    // Clean up cart by removing items that are no longer available
+    cleanCart() {
+        const cart = this.getCart();
+        const cleanedCart = [];
+        let hasChanges = false;
+
+        // Check if ProductManager is available
+        if (typeof window.ProductManager === 'undefined') {
+            console.warn('ProductManager not available, cannot clean cart');
+            return;
+        }
+
+        cart.forEach(item => {
+            // Check if product still exists in the product database
+            const product = window.ProductManager.getById(item.id);
+            if (product) {
+                cleanedCart.push(item);
+            } else {
+                console.log(`Product ${item.name} (ID: ${item.id}) no longer available, removing from cart`);
+                hasChanges = true;
+            }
+        });
+
+        if (hasChanges) {
+            this.saveCart(cleanedCart);
+            console.log('Cart cleaned up, removed unavailable products');
+        }
     }
 };
 

@@ -90,7 +90,9 @@ function initMobileMenu() {
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
+        mobileMenuButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             mobileMenu.classList.toggle('hidden');
         });
 
@@ -126,65 +128,75 @@ function initQuickViewModal() {
 
 function openQuickView(product) {
     const modal = document.getElementById('quick-view-modal');
-    const content = document.querySelector('.quick-view-content');
     
-    if (modal && content) {
+    if (modal) {
         // Update modal content
-        content.innerHTML = `
-            <div class="gallery-container">
-                <div class="gallery-main">
-                    <img src="${product.images[0]}" alt="${product.name}" class="w-full h-96 object-cover rounded-xl">
-                </div>
-                <div class="gallery-thumbnails">
-                    ${product.images.map((img, index) => `
-                        <img src="${img}" alt="Product image ${index + 1}" 
-                             class="thumbnail ${index === 0 ? 'active' : ''}"
-                             onclick="changeQuickViewImage('${img}', this)">
-                    `).join('')}
-                </div>
-            </div>
-            <div class="product-details">
-                <h3 class="product-title">${product.name}</h3>
-                <p class="product-price">${formatPrice(product.price)}</p>
-                <p class="product-description">${product.description}</p>
-                
-                <div class="product-features">
-                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Features</h4>
-                    ${product.features.map(feature => `
-                        <div class="feature-item">
-                            <i class="fas fa-check text-green-500"></i>
-                            <span>${feature}</span>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-gray-600">Product:</span>
-                        <span class="font-semibold">${product.name}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Price:</span>
-                        <span class="text-xl font-bold text-primary-600">${formatPrice(product.price)}</span>
-                    </div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <button class="add-to-cart-btn flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105"
-                            data-product-id="${product.id}">
-                        <i class="fas fa-shopping-cart mr-2"></i>
-                        Add to Cart
-                    </button>
-                    <button class="whatsapp-btn flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300"
-                            onclick="window.openWhatsAppChat(${JSON.stringify(product).replace(/"/g, '"')})">
-                        <i class="fab fa-whatsapp mr-2"></i>
-                        Chat on WhatsApp
-                    </button>
-                </div>
-            </div>
-        `;
+        const mainImage = document.getElementById('quick-view-main-image');
+        const productName = document.getElementById('quick-view-product-name');
+        const productPrice = document.getElementById('quick-view-product-price');
+        const productDescription = document.getElementById('quick-view-product-description');
+        const featuresContainer = document.getElementById('quick-view-features');
+        const thumbnailsContainer = document.getElementById('quick-view-thumbnails');
+        
+        if (mainImage) mainImage.src = product.images[0];
+        if (productName) productName.textContent = product.name;
+        if (productPrice) productPrice.textContent = formatPrice(product.price);
+        if (productDescription) productDescription.textContent = product.description;
+        
+        // Update features
+        if (featuresContainer) {
+            featuresContainer.innerHTML = '';
+            product.features.forEach(feature => {
+                const featureItem = document.createElement('div');
+                featureItem.className = 'flex items-center space-x-3';
+                featureItem.innerHTML = `
+                    <i class="fas fa-check text-green-500"></i>
+                    <span class="text-gray-600">${feature}</span>
+                `;
+                featuresContainer.appendChild(featureItem);
+            });
+        }
+        
+        // Update thumbnails
+        if (thumbnailsContainer) {
+            thumbnailsContainer.innerHTML = '';
+            product.images.forEach((img, index) => {
+                const thumbnail = document.createElement('img');
+                thumbnail.src = img;
+                thumbnail.alt = `Product image ${index + 1}`;
+                thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                thumbnail.onclick = () => changeQuickViewImage(img, thumbnail);
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+        }
 
         modal.classList.remove('hidden');
+        
+        // Set up button event listeners
+        setupQuickViewModalButtons(product);
+    }
+}
+
+// Add event listeners for Quick View modal buttons
+function setupQuickViewModalButtons(product) {
+    const addToCartBtn = document.getElementById('quick-view-add-to-cart');
+    const whatsappBtn = document.getElementById('quick-view-whatsapp');
+    
+    if (addToCartBtn) {
+        addToCartBtn.onclick = () => {
+            if (window.CartManager) {
+                window.CartManager.addToCart(product, 1);
+                updateCartCount();
+            }
+        };
+    }
+    
+    if (whatsappBtn) {
+        whatsappBtn.onclick = () => {
+            const message = `I'm interested in your ${product.name} (${formatPrice(product.price)}). Can you provide more details?`;
+            const whatsappUrl = `https://wa.me/923144781120?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        };
     }
 }
 
@@ -326,8 +338,11 @@ function initFeaturedProducts() {
         if (featuredProducts && featuredProducts.length > 0) {
             featuredProductsContainer.innerHTML = '';
             
-            // Limit to first 3 featured products
-            const displayProducts = featuredProducts.slice(0, 3);
+            // Filter to only show sofas
+            const sofaProducts = featuredProducts.filter(product => product.category === 'sofas');
+            
+            // Limit to first 3 sofa products
+            const displayProducts = sofaProducts.slice(0, 3);
             
             displayProducts.forEach(product => {
                 try {
@@ -338,7 +353,7 @@ function initFeaturedProducts() {
                 }
             });
             
-            console.log(`Successfully loaded ${displayProducts.length} featured products`);
+            console.log(`Successfully loaded ${displayProducts.length} featured sofa products`);
         } else {
             console.warn('No featured products found');
             showNoFeaturedProducts(featuredProductsContainer);
