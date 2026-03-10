@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop - Premium Furniture Store</title>
-    <meta name="description" content="Browse our collection of premium sofas, beds, and mattresses. Same day delivery and cash on delivery available.">
-    <meta name="keywords" content="furniture shop, sofas, beds, mattresses, online furniture store">
+    <title>Shop - Premium Sofa Store</title>
+    <meta name="description" content="Browse our collection of premium modern sofas and sectional sofas. Same day delivery and cash on delivery available.">
+    <meta name="keywords" content="sofa shop, modern sofas, sectional sofas, online sofa store, premium sofas">
     
     <!-- OpenGraph Meta Tags -->
     <meta property="og:title" content="Shop - Premium Furniture Store">
@@ -66,12 +66,6 @@
     </script>
 </head>
 <body class="font-sans antialiased">
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/923144781120" target="_blank"
-       class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 z-50 transform hover:scale-110" 
-       aria-label="Chat on WhatsApp">
-        <i class="fab fa-whatsapp text-2xl"></i>
-    </a>
 
     <!-- Header -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -136,12 +130,6 @@
                         </button>
                         <button class="filter-category-btn bg-white text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-primary-100 hover:text-primary-600 transition-all duration-300 border-2 border-transparent hover:border-primary-200" data-category="sofas">
                             Sofas
-                        </button>
-                        <button class="filter-category-btn bg-white text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-secondary-100 hover:text-secondary-600 transition-all duration-300 border-2 border-transparent hover:border-secondary-200" data-category="beds">
-                            Beds
-                        </button>
-                        <button class="filter-category-btn bg-white text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-green-100 hover:text-green-600 transition-all duration-300 border-2 border-transparent hover:border-green-200" data-category="mattresses">
-                            Mattresses
                         </button>
                     </div>
                 </div>
@@ -392,6 +380,57 @@
         </div>
     </div>
 
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-4xl w-full p-6 relative animate-in slide-in-from-bottom-2 duration-300">
+            <button id="close-quick-view" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Product Gallery -->
+                <div class="gallery-container">
+                    <div class="gallery-main">
+                        <img id="quick-view-main-image" src="" alt="" 
+                             class="w-full h-96 object-cover rounded-xl">
+                    </div>
+                    <div class="gallery-thumbnails" id="quick-view-thumbnails">
+                        <!-- Thumbnails will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Product Information -->
+                <div class="product-details">
+                    <h3 id="quick-view-product-name" class="text-2xl font-bold text-gray-900 mb-2"></h3>
+                    <p id="quick-view-product-price" class="text-3xl font-bold text-primary-600 mb-4"></p>
+                    <p id="quick-view-product-description" class="text-gray-600 mb-6"></p>
+                    
+                    <!-- Product Features -->
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Features</h4>
+                        <div id="quick-view-features" class="space-y-2">
+                            <!-- Features will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="quick-view-add-to-cart" 
+                                class="flex-1 bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-shopping-cart mr-2"></i>
+                            Add to Cart
+                        </button>
+                        <button id="quick-view-contact"
+                                class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Contact Us
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center animate-in slide-in-from-bottom-2 duration-300">
@@ -399,7 +438,7 @@
                 <i class="fas fa-check text-green-600 text-2xl"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h3>
-            <p class="text-gray-600 mb-6">Your order has been sent to WhatsApp. Please complete the order with our representative.</p>
+            <p class="text-gray-600 mb-6">Your order has been placed successfully! We will contact you shortly to complete the process.</p>
             <button id="close-success-modal" 
                     class="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300">
                 Close
@@ -409,7 +448,6 @@
 
     <!-- JavaScript -->
     <script src="js/products.js"></script>
-    <script src="js/whatsapp.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/shop.js"></script>
     <script src="js/performance.js"></script>

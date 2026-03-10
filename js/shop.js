@@ -38,8 +38,21 @@ document.addEventListener('DOMContentLoaded', function() {
     init();
 
     function init() {
+        console.log('Shop init called');
+        console.log('window.ProductManager:', typeof window.ProductManager);
+        console.log('window.CartManager:', typeof window.CartManager);
+        console.log('ProductManager:', typeof ProductManager);
+        console.log('CartManager:', typeof CartManager);
+
+        // Wait for ProductManager to be available
+        if (typeof window.ProductManager === 'undefined') {
+            console.warn('ProductManager not available yet, waiting...');
+            setTimeout(init, 100);
+            return;
+        }
+
         // Set up price range display
-        const priceRange = ProductManager.getPriceRange();
+        const priceRange = window.ProductManager.getPriceRange();
         minPriceDisplay.textContent = priceRange.min;
         maxPriceDisplay.textContent = priceRange.max;
         
@@ -55,6 +68,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set up event listeners
         setupEventListeners();
+        
+        // Initialize Quick View modal for shop page
+        initQuickViewModalForShop();
+    }
+
+    function initQuickViewModalForShop() {
+        // Initialize Quick View modal if it exists (for shop page)
+        const quickViewModal = document.getElementById('quick-view-modal');
+        const closeQuickViewBtn = document.getElementById('close-quick-view');
+        
+        if (closeQuickViewBtn) {
+            closeQuickViewBtn.addEventListener('click', () => {
+                if (quickViewModal) quickViewModal.classList.add('hidden');
+            });
+        }
+
+        // Close modal when clicking outside
+        if (quickViewModal) {
+            quickViewModal.addEventListener('click', (e) => {
+                if (e.target === quickViewModal) {
+                    quickViewModal.classList.add('hidden');
+                }
+            });
+        }
     }
 
     function setupEventListeners() {
@@ -124,15 +161,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const categories = ProductManager.getCategories();
         categoryFilters.innerHTML = '';
         
-        categories.forEach(category => {
+        // Only show sofas category
+        const sofasCategory = categories.find(cat => cat.id === 'sofas');
+        if (sofasCategory) {
             const label = document.createElement('label');
             label.className = 'filter-option';
             label.innerHTML = `
-                <input type="checkbox" data-category="${category.id}">
-                <span>${category.name} (${category.count})</span>
+                <input type="checkbox" data-category="${sofasCategory.id}" checked>
+                <span>${sofasCategory.name} (${sofasCategory.count})</span>
             `;
             categoryFilters.appendChild(label);
-        });
+        }
 
         // Add event listeners to category checkboxes
         categoryFilters.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -210,17 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div class="product-badge bg-green-500 text-white">Cash on Delivery</div>
                 
-                <div class="product-overlay">
-                    <button class="quick-view-btn bg-white text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors mr-2"
-                            data-product-id="${product.id}">
-                        Quick View
-                    </button>
-                    <button class="add-to-cart-btn bg-primary-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-primary-700 transition-colors"
-                            data-product-id="${product.id}">
-                        Add to Cart
-                    </button>
-                </div>
-                
                 <div class="heart-icon ${isFavorited(product.id) ? 'favorited' : ''}" data-product-id="${product.id}">
                     <i class="fas fa-heart"></i>
                 </div>
@@ -252,15 +280,19 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Add event listeners
-        card.querySelector('.quick-view-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            openQuickView(product.id);
-        });
-
-        card.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            addToCart(product.id);
+        // Add event listeners - use event delegation to handle multiple buttons
+        card.addEventListener('click', (e) => {
+            const quickViewBtn = e.target.closest('.quick-view-btn');
+            const addToCartBtn = e.target.closest('.add-to-cart-btn');
+            
+            if (quickViewBtn) {
+                e.preventDefault();
+                window.handleQuickView(product.id);
+            }
+            if (addToCartBtn) {
+                e.preventDefault();
+                window.addToCart(product.id);
+            }
         });
 
         card.querySelector('.heart-icon').addEventListener('click', (e) => {
@@ -367,34 +399,55 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileMenu.classList.add('hidden');
         }
     });
-});
 
-// Global functions for quick view and order modal
-function openQuickView(productId) {
-    const product = ProductManager.getById(productId);
-    if (product) {
-        // This will be handled by the main app.js file
-        window.openQuickView(product);
-    }
-}
-
-function openOrderModal(productId) {
-    const product = ProductManager.getById(productId);
-    if (product) {
-        // This will be handled by the main app.js file
-        window.openOrderModal(product);
-    }
-}
-
-// Add to cart function
-function addToCart(productId) {
-    const product = ProductManager.getById(productId);
-    if (product) {
-        // Use the CartManager from cart.js
-        if (window.CartManager) {
+    // Add to cart function (moved inside DOMContentLoaded)
+    window.addToCart = function(productId) {
+        console.log('addToCart called with productId:', productId);
+        console.log('ProductManager available:', typeof window.ProductManager);
+        console.log('CartManager available:', typeof window.CartManager);
+        
+        // Ensure both managers are available
+        if (!window.ProductManager) {
+            console.warn('ProductManager not available yet');
+            alert('Product system not ready. Please refresh the page.');
+            return;
+        }
+        
+        if (!window.CartManager) {
+            console.warn('CartManager not available');
+            alert('Cart system not available. Please try again.');
+            return;
+        }
+        
+        const product = window.ProductManager.getById(productId);
+        if (product) {
+            console.log('Product found:', product);
+            console.log('Adding to cart:', product.name);
             window.CartManager.addToCart(product, 1);
         } else {
-            console.warn('CartManager not available');
+            console.warn('Product not found for ID:', productId);
+            alert('Product not found. Please try again.');
+        }
+    };
+
+    // Global functions for quick view and order modal
+    window.handleQuickView = function(productId) {
+        const product = ProductManager.getById(productId);
+        if (product) {
+            // Call the function from app.js
+            if (typeof window.openQuickView === 'function') {
+                window.openQuickView(product);
+            }
         }
     }
-}
+
+    window.handleOrderModal = function(productId) {
+        const product = ProductManager.getById(productId);
+        if (product) {
+            // Call the function from app.js
+            if (typeof window.openOrderModal === 'function') {
+                window.openOrderModal(product);
+            }
+        }
+    }
+});

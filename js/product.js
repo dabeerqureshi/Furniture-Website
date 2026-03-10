@@ -214,6 +214,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Order now button
+        const orderNowBtn = document.getElementById('order-now-btn');
+        if (orderNowBtn) {
+            orderNowBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openOrderModal(product);
+            });
+        }
+
         // WhatsApp chat button
         whatsappChatBtn.addEventListener('click', (e) => {
             e.preventDefault();
